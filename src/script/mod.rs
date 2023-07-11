@@ -372,4 +372,8 @@ impl Script {
     pub fn to_script_bits(&self) -> Vec<ScriptBit> {
         self.0.clone()
     }
+
+    pub fn get_script_bit(&self, index: usize) -> Option<ScriptBit> {
+        self.0.get(index).cloned()
+    }
 }
