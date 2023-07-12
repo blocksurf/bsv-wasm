@@ -493,4 +493,28 @@ mod script_tests {
 
         assert_eq!(&script.to_asm_string(), "OP_1 OP_IF OP_ENDIF")
     }
+
+    #[test]
+    fn test_script_bit_to_vec() {
+        let test_vec: Vec<u8> = vec![0; 256];
+    
+        let bits = vec![
+            ScriptBit::OpCode(OpCodes::OP_1),
+            ScriptBit::If {
+                code: OpCodes::OP_IF,
+                pass: vec![],
+                fail: None,
+            },
+            ScriptBit::Push(vec![33, 232]),
+            ScriptBit::PushData(OpCodes::OP_PUSHDATA2, test_vec.clone())];
+
+        let mut results = vec![];
+
+        for script_bit in bits {
+            let inner = script_bit.to_vec();
+            results.push(inner);
+        }
+
+       assert_eq!(results, vec![None, None, Some(vec![33, 232]), Some(test_vec)])
+    }
 }
