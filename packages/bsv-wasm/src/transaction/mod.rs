@@ -43,11 +43,11 @@ impl Transaction {
     }
 
     pub fn get_input(&self, index: usize) -> Option<TxIn> {
-        self.0.get_input(index).map(|txin| TxIn(txin))
+        self.0.get_input(index).map(TxIn)
     }
 
     pub fn get_output(&self, index: usize) -> Option<TxOut> {
-        self.0.get_output(index).map(|txout| TxOut(txout))
+        self.0.get_output(index).map(TxOut)
     }
 
     pub fn get_n_locktime(&self) -> u32 {
@@ -65,10 +65,6 @@ impl Transaction {
     #[wasm_bindgen(constructor)]
     pub fn new(version: u32, n_locktime: u32) -> Transaction {
         Transaction(BSVTransaction::new(version, n_locktime))
-    }
-
-    pub fn default() -> Transaction {
-        Transaction(BSVTransaction::default())
     }
 
     pub fn set_version(&mut self, version: u32) -> Transaction {
@@ -173,7 +169,7 @@ impl Transaction {
      * Adds an array of TxIn's to the transaction
      * @param {TxIn[]} tx_ins
      */
-    pub fn add_inputs(&mut self, tx_ins: Box<[JsValue]>) {
+    pub fn add_inputs(&mut self, tx_ins: Vec<JsValue>) {
         let js_value = &*tx_ins.to_vec();
 
         for elem in js_value {
@@ -197,7 +193,7 @@ impl Transaction {
      * Adds an array of TxOuts to the transaction
      * @param {TxOut[]} tx_outs
      */
-    pub fn add_outputs(&mut self, tx_outs: Box<[JsValue]>) {
+    pub fn add_outputs(&mut self, tx_outs: Vec<JsValue>) {
         let js_value = &*tx_outs.to_vec();
 
         for elem in js_value {

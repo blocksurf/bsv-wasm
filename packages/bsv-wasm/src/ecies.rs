@@ -1,7 +1,7 @@
-use wasm_bindgen::prelude::*;
-use bsv::ECIESCiphertext as BSVECIESCiphertext;
 use bsv::CipherKeys as BSVCipherKeys;
+use bsv::ECIESCiphertext as BSVECIESCiphertext;
 use bsv::ECIES as BSVECIES;
+use wasm_bindgen::prelude::*;
 
 use crate::keypair::private_key::PrivateKey;
 use crate::keypair::public_key::PublicKey;
@@ -64,11 +64,11 @@ impl ECIESCiphertext {
     }
 
     pub fn get_cipher_keys(&self) -> Option<CipherKeys> {
-        self.0.get_cipher_keys().map(|x| CipherKeys(x))
+        self.0.get_cipher_keys().map(CipherKeys)
     }
 
     pub fn to_bytes(&self) -> Vec<u8> {
-       self.0.to_bytes() 
+        self.0.to_bytes()
     }
 
     pub fn extract_public_key(&self) -> Result<PublicKey, wasm_bindgen::JsError> {

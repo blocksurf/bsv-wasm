@@ -495,26 +495,28 @@ mod script_tests {
     }
 
     #[test]
-    fn test_script_bit_to_vec() {
-        let test_vec: Vec<u8> = vec![0; 256];
-    
-        let bits = vec![
-            ScriptBit::OpCode(OpCodes::OP_1),
-            ScriptBit::If {
-                code: OpCodes::OP_IF,
-                pass: vec![],
-                fail: None,
-            },
-            ScriptBit::Push(vec![33, 232]),
-            ScriptBit::PushData(OpCodes::OP_PUSHDATA2, test_vec.clone())];
+    fn scrypt_stateful_contract() {
+        let script = Script::from_hex("6a00010100010001000100010001000100010001001400000000").unwrap();
 
-        let mut results = vec![];
+        assert_eq!(
+            &script.to_script_bits(),
+            &[
+                ScriptBit::OpCode(OpCodes::OP_RETURN),
+                ScriptBit::OpCode(OpCodes::OP_0),
+                ScriptBit::Push(hex::decode("01").unwrap()),
+                ScriptBit::OpCode(OpCodes::OP_0),
+                ScriptBit::Push(hex::decode("00").unwrap()),
+                ScriptBit::Push(hex::decode("00").unwrap()),
+                ScriptBit::Push(hex::decode("00").unwrap()),
+                ScriptBit::Push(hex::decode("00").unwrap()),
+                ScriptBit::Push(hex::decode("00").unwrap()),
+                ScriptBit::Push(hex::decode("00").unwrap()),
+                ScriptBit::Push(hex::decode("00").unwrap()),
+                ScriptBit::Push(hex::decode("00").unwrap()),
+                ScriptBit::Push(hex::decode("00000000").unwrap()),
+            ]
+        );
 
-        for script_bit in bits {
-            let inner = script_bit.to_vec();
-            results.push(inner);
-        }
-
-       assert_eq!(results, vec![None, None, Some(vec![33, 232]), Some(test_vec)])
+        assert_eq!(&script.to_asm_string(), "OP_RETURN 0 01 0 00 00 00 00 00 00 00 00 00000000")
     }
 }

@@ -1,7 +1,10 @@
-use wasm_bindgen::prelude::*;
 use bsv::ECDSA as BSVECDSA;
+use wasm_bindgen::prelude::*;
 
-use crate::{signature::Signature, keypair::{public_key::PublicKey, private_key::PrivateKey}};
+use crate::{
+    keypair::{private_key::PrivateKey, public_key::PublicKey},
+    signature::Signature,
+};
 
 #[wasm_bindgen]
 #[derive(PartialEq, Eq, Clone, Copy)]
@@ -10,9 +13,9 @@ pub enum SigningHash {
     Sha256d,
 }
 
-impl Into<bsv::SigningHash> for SigningHash {
-    fn into(self) -> bsv::SigningHash {
-        match self {
+impl From<SigningHash> for bsv::SigningHash {
+    fn from(item: SigningHash) -> Self {
+        match item {
             SigningHash::Sha256 => bsv::SigningHash::Sha256,
             SigningHash::Sha256d => bsv::SigningHash::Sha256d,
         }
@@ -31,7 +34,13 @@ impl ECDSA {
         preimage: &[u8],
         hash_algo: SigningHash,
     ) -> Result<PrivateKey, wasm_bindgen::JsError> {
-        Ok(PrivateKey(BSVECDSA::private_key_from_signature_k(&signature.0, &public_key.0, &ephemeral_key.0, preimage, hash_algo.into())?))
+        Ok(PrivateKey(BSVECDSA::private_key_from_signature_k(
+            &signature.0,
+            &public_key.0,
+            &ephemeral_key.0,
+            preimage,
+            hash_algo.into(),
+        )?))
     }
 
     pub fn sign_with_random_k(private_key: &PrivateKey, preimage: &[u8], hash_algo: SigningHash, reverse_k: bool) -> Result<Signature, wasm_bindgen::JsError> {
