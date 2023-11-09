@@ -669,6 +669,6 @@ fn calculate_sighash_preimage(txscript: &mut TxScript, sighash: SigHash, codesep
 
     txscript
         .tx
-        .sighash_preimage_impl(txscript.input_index, sighash, &unsigned_script, satoshis)
+        .sighash_preimage_impl(txscript.input_index, sighash, &unsigned_script, satoshis, None)
         .map_err(|e| InterpreterError::SighashPreimageCalculation(e.to_string()))
 }

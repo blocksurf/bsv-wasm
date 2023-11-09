@@ -106,8 +106,16 @@ impl Transaction {
     /**
      * Calculates the SIGHASH buffer and then signs it
      */
-    pub(crate) fn sign_impl(&mut self, priv_key: &PrivateKey, sighash: SigHash, n_tx_in: usize, unsigned_script: &Script, value: u64) -> Result<SighashSignature, BSVErrors> {
-        let buffer = self.sighash_preimage_impl(n_tx_in, sighash, unsigned_script, value)?;
+    pub(crate) fn sign_impl(
+        &mut self,
+        priv_key: &PrivateKey,
+        sighash: SigHash,
+        n_tx_in: usize,
+        unsigned_script: &Script,
+        value: u64,
+        le_outpoint: Option<bool>,
+    ) -> Result<SighashSignature, BSVErrors> {
+        let buffer = self.sighash_preimage_impl(n_tx_in, sighash, unsigned_script, value, le_outpoint)?;
 
         let signature = ECDSA::sign_with_deterministic_k_impl(priv_key, &buffer, crate::SigningHash::Sha256d, true, false)?;
 
@@ -129,8 +137,9 @@ impl Transaction {
         n_tx_in: usize,
         unsigned_script: &Script,
         value: u64,
+        le_outpoint: Option<bool>,
     ) -> Result<SighashSignature, BSVErrors> {
-        let buffer = self.sighash_preimage_impl(n_tx_in, sighash, unsigned_script, value)?;
+        let buffer = self.sighash_preimage_impl(n_tx_in, sighash, unsigned_script, value, le_outpoint)?;
 
         let signature = ECDSA::sign_with_k_impl(priv_key, ephemeral_key, &buffer, crate::SigningHash::Sha256d)?;
 
@@ -144,12 +153,12 @@ impl Transaction {
     /**
      * Calculates the SIGHASH Buffer to be signed
      */
-    pub(crate) fn sighash_preimage_impl(&mut self, n_tx_in: usize, sighash: SigHash, unsigned_script: &Script, value: u64) -> Result<Vec<u8>, BSVErrors> {
+    pub(crate) fn sighash_preimage_impl(&mut self, n_tx_in: usize, sighash: SigHash, unsigned_script: &Script, value: u64, le_outpoint: Option<bool>) -> Result<Vec<u8>, BSVErrors> {
         // If uses any of the FORK_ID sighash variants
         // Gross, fix this. Maybe a nice method on SigHash enum to check if contains another SigHash type
         match sighash {
             SigHash::Input | SigHash::InputOutput | SigHash::InputOutputs | SigHash::Inputs | SigHash::InputsOutput | SigHash::InputsOutputs => {
-                self.sighash_bip143(n_tx_in, sighash, unsigned_script, value)
+                self.sighash_bip143(n_tx_in, sighash, unsigned_script, value, le_outpoint)
             }
             _ => self.sighash_legacy(n_tx_in, sighash, unsigned_script),
         }
@@ -221,7 +230,7 @@ impl Transaction {
         Ok(buffer)
     }
 
-    pub(crate) fn sighash_bip143(&mut self, n_tx_in: usize, sighash: SigHash, unsigned_script: &Script, value: u64) -> Result<Vec<u8>, BSVErrors> {
+    pub(crate) fn sighash_bip143(&mut self, n_tx_in: usize, sighash: SigHash, unsigned_script: &Script, value: u64, le_outpoint: Option<bool>) -> Result<Vec<u8>, BSVErrors> {
         let mut buffer: Vec<u8> = vec![];
 
         let input = self.get_input(n_tx_in).ok_or_else(|| BSVErrors::OutOfBounds(format!("Could not get TxIn at index {}", n_tx_in)))?;
@@ -229,7 +238,7 @@ impl Transaction {
         let hashed_outputs = self.hash_outputs(sighash, n_tx_in)?;
 
         buffer.write_u32::<LittleEndian>(self.version)?;
-        buffer.write_all(&self.hash_inputs(sighash))?;
+        buffer.write_all(&self.hash_inputs(sighash, le_outpoint))?;
         buffer.write_all(&self.hash_sequence(sighash))?;
         buffer.write_all(&input.get_outpoint_bytes(Some(true)))?;
         buffer.write_varint(unsigned_script.to_bytes().len() as u64)?;
@@ -303,14 +312,16 @@ impl Transaction {
      * - If SigHash does not contain ANYONECANPAY, SHA256d all input outpoints
      * - Else 32 bytes of zeroes
      */
-    pub fn hash_inputs(&mut self, sighash: SigHash) -> Vec<u8> {
+    pub fn hash_inputs(&mut self, sighash: SigHash, le_outpoint: Option<bool>) -> Vec<u8> {
+        let little_endian = le_outpoint.unwrap_or(true);
+
         match sighash {
             SigHash::ANYONECANPAY | SigHash::Input | SigHash::InputOutput | SigHash::Legacy_Input | SigHash::Legacy_InputOutput | SigHash::InputOutputs => [0; 32].to_vec(),
             _ => {
                 if let Some(x) = &self.hash_cache.hash_inputs {
                     return x.to_bytes();
                 }
-                let input_bytes: Vec<u8> = self.inputs.iter().flat_map(|txin| txin.get_outpoint_bytes(Some(true))).collect();
+                let input_bytes: Vec<u8> = self.inputs.iter().flat_map(|txin| txin.get_outpoint_bytes(Some(little_endian))).collect();
 
                 let hash = Hash::sha_256d(&input_bytes);
                 self.hash_cache.hash_inputs = Some(hash.clone());
@@ -328,16 +339,25 @@ impl Transaction {
 }
 
 impl Transaction {
-    pub fn sign(&mut self, priv_key: &PrivateKey, sighash: SigHash, n_tx_in: usize, unsigned_script: &Script, value: u64) -> Result<SighashSignature, BSVErrors> {
-        Transaction::sign_impl(self, priv_key, sighash, n_tx_in, unsigned_script, value)
+    pub fn sign(&mut self, priv_key: &PrivateKey, sighash: SigHash, n_tx_in: usize, unsigned_script: &Script, value: u64, le_outpoint: Option<bool>) -> Result<SighashSignature, BSVErrors> {
+        Transaction::sign_impl(self, priv_key, sighash, n_tx_in, unsigned_script, value, le_outpoint)
     }
 
-    pub fn sign_with_k(&mut self, priv_key: &PrivateKey, ephemeral_key: &PrivateKey, sighash: SigHash, n_tx_in: usize, unsigned_script: &Script, value: u64) -> Result<SighashSignature, BSVErrors> {
-        Transaction::sign_with_k_impl(self, priv_key, ephemeral_key, sighash, n_tx_in, unsigned_script, value)
+    pub fn sign_with_k(
+        &mut self,
+        priv_key: &PrivateKey,
+        ephemeral_key: &PrivateKey,
+        sighash: SigHash,
+        n_tx_in: usize,
+        unsigned_script: &Script,
+        value: u64,
+        le_outpoint: Option<bool>,
+    ) -> Result<SighashSignature, BSVErrors> {
+        Transaction::sign_with_k_impl(self, priv_key, ephemeral_key, sighash, n_tx_in, unsigned_script, value, le_outpoint)
     }
 
-    pub fn sighash_preimage(&mut self, sighash: SigHash, n_tx_in: usize, unsigned_script: &Script, value: u64) -> Result<Vec<u8>, BSVErrors> {
-        Transaction::sighash_preimage_impl(self, n_tx_in, sighash, unsigned_script, value)
+    pub fn sighash_preimage(&mut self, sighash: SigHash, n_tx_in: usize, unsigned_script: &Script, value: u64, le_outpoint: Option<bool>) -> Result<Vec<u8>, BSVErrors> {
+        Transaction::sighash_preimage_impl(self, n_tx_in, sighash, unsigned_script, value, le_outpoint)
     }
 }
 
