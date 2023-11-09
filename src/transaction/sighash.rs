@@ -238,9 +238,9 @@ impl Transaction {
         let hashed_outputs = self.hash_outputs(sighash, n_tx_in)?;
 
         buffer.write_u32::<LittleEndian>(self.version)?;
-        buffer.write_all(&self.hash_inputs(sighash, le_outpoint))?;
+        buffer.write_all(&self.hash_inputs(sighash, None))?;
         buffer.write_all(&self.hash_sequence(sighash))?;
-        buffer.write_all(&input.get_outpoint_bytes(Some(true)))?;
+        buffer.write_all(&input.get_outpoint_bytes(le_outpoint))?;
         buffer.write_varint(unsigned_script.to_bytes().len() as u64)?;
         buffer.write_all(&unsigned_script.to_bytes())?;
         buffer.write_u64::<LittleEndian>(value)?;
