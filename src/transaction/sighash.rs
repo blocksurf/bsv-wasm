@@ -115,9 +115,9 @@ impl Transaction {
         value: u64,
         le_outpoint: Option<bool>,
     ) -> Result<SighashSignature, BSVErrors> {
-        let buffer = self.sighash_preimage_impl(n_tx_in, sighash, unsigned_script, value, le_outpoint)?;
+        let buffer = Transaction::sighash_preimage_impl(self, n_tx_in, sighash, unsigned_script, value, le_outpoint)?;
 
-        let signature = ECDSA::sign_with_deterministic_k_impl(priv_key, &buffer, crate::SigningHash::Sha256d, true, false)?;
+        let signature = ECDSA::sign_with_deterministic_k_impl(priv_key, &buffer, crate::SigningHash::Sha256d, false, false)?;
 
         Ok(SighashSignature {
             signature,
@@ -139,7 +139,7 @@ impl Transaction {
         value: u64,
         le_outpoint: Option<bool>,
     ) -> Result<SighashSignature, BSVErrors> {
-        let buffer = self.sighash_preimage_impl(n_tx_in, sighash, unsigned_script, value, le_outpoint)?;
+        let buffer = Transaction::sighash_preimage_impl(self, n_tx_in, sighash, unsigned_script, value, le_outpoint)?;
 
         let signature = ECDSA::sign_with_k_impl(priv_key, ephemeral_key, &buffer, crate::SigningHash::Sha256d)?;
 
@@ -153,14 +153,14 @@ impl Transaction {
     /**
      * Calculates the SIGHASH Buffer to be signed
      */
-    pub(crate) fn sighash_preimage_impl(&mut self, n_tx_in: usize, sighash: SigHash, unsigned_script: &Script, value: u64, le_outpoint: Option<bool>) -> Result<Vec<u8>, BSVErrors> {
+    pub(crate) fn sighash_preimage_impl(tx: &mut Transaction, n_tx_in: usize, sighash: SigHash, unsigned_script: &Script, value: u64, le_outpoint: Option<bool>) -> Result<Vec<u8>, BSVErrors> {
         // If uses any of the FORK_ID sighash variants
         // Gross, fix this. Maybe a nice method on SigHash enum to check if contains another SigHash type
         match sighash {
             SigHash::Input | SigHash::InputOutput | SigHash::InputOutputs | SigHash::Inputs | SigHash::InputsOutput | SigHash::InputsOutputs => {
-                self.sighash_bip143(n_tx_in, sighash, unsigned_script, value, le_outpoint)
+                tx.sighash_bip143(n_tx_in, sighash, unsigned_script, value, le_outpoint)
             }
-            _ => self.sighash_legacy(n_tx_in, sighash, unsigned_script),
+            _ => tx.sighash_legacy(n_tx_in, sighash, unsigned_script),
         }
     }
 
