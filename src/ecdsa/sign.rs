@@ -19,7 +19,7 @@ use rand_core::RngCore;
 use sha2::Sha256;
 
 impl ECDSA {
-    fn sign_preimage_deterministic_k<D>(priv_key: &SecretKey, digest: D, reverse_endian_k: bool, reverse_endian_digest: bool) -> Result<(SecpSignature, Option<RecoveryId>), BSVErrors>
+    fn sign_preimage_deterministic_k<D>(priv_key: &SecretKey, digest: D, reverse_endian_k: bool) -> Result<(SecpSignature, Option<RecoveryId>), BSVErrors>
     where
         D: FixedOutput<OutputSize = digest::consts::U32> + digest::BlockInput + Clone + Default + digest::Reset + digest::Update + crate::ReversibleDigest,
     {
@@ -32,11 +32,7 @@ impl ECDSA {
 
         let k = rfc6979_generate_k::<_, D>(&priv_scalar, &k_digest, &[]);
 
-        let msg_scalar = match reverse_endian_digest {
-            true => Scalar::from_uint_reduced(U256::from_le_slice(&final_digest)),
-            false => Scalar::from_uint_reduced(U256::from_be_slice(&final_digest))
-        };
-
+        let msg_scalar = <Scalar as Reduce<U256>>::from_be_bytes_reduced(final_digest);
         let (signature, recid) = priv_scalar.try_sign_prehashed(**k, msg_scalar)?;
         let recoverable_id = recid.ok_or_else(ecdsa::Error::new)?.try_into()?;
         let rec_sig = recoverable::Signature::new(&signature, recoverable_id)?;
@@ -70,7 +66,7 @@ impl ECDSA {
             SigningHash::Sha256d => **rfc6979_generate_k::<_, Sha256d>(&priv_scalar, &k_digest, &added_entropy),
         };
 
-        let msg_scalar = Scalar::from_uint_reduced(U256::from_le_slice(digest)); // needs flag?
+        let msg_scalar = Scalar::from_uint_reduced(U256::from_le_slice(digest));
         priv_scalar.try_sign_prehashed(k, msg_scalar)
     }
 
@@ -99,10 +95,10 @@ impl ECDSA {
      * Secp256k1 signature inputs must be 32 bytes in length - SigningAlgo will output a 32 byte buffer.
      * HASH+HMAC can be reversed for K generation if necessary.
      */
-    pub(crate) fn sign_with_deterministic_k_impl(private_key: &PrivateKey, preimage: &[u8], hash_algo: SigningHash, reverse_k: bool, reverse_endian_digest: bool) -> Result<Signature, BSVErrors> {
+    pub(crate) fn sign_with_deterministic_k_impl(private_key: &PrivateKey, preimage: &[u8], hash_algo: SigningHash, reverse_k: bool) -> Result<Signature, BSVErrors> {
         let digest = get_hash_digest(hash_algo, preimage);
 
-        let (sig, recovery) = ECDSA::sign_preimage_deterministic_k(&private_key.secret_key, digest, reverse_k, reverse_endian_digest)?;
+        let (sig, recovery) = ECDSA::sign_preimage_deterministic_k(&private_key.secret_key, digest, reverse_k)?;
 
         Ok(Signature {
             sig,
@@ -132,8 +128,8 @@ impl ECDSA {
         ECDSA::sign_with_random_k_impl(private_key, preimage, hash_algo, reverse_k)
     }
 
-    pub fn sign_with_deterministic_k(private_key: &PrivateKey, preimage: &[u8], hash_algo: SigningHash, reverse_k: bool, reverse_endian_digest: bool) -> Result<Signature, BSVErrors> {
-        ECDSA::sign_with_deterministic_k_impl(private_key, preimage, hash_algo, reverse_k, reverse_endian_digest)
+    pub fn sign_with_deterministic_k(private_key: &PrivateKey, preimage: &[u8], hash_algo: SigningHash, reverse_k: bool) -> Result<Signature, BSVErrors> {
+        ECDSA::sign_with_deterministic_k_impl(private_key, preimage, hash_algo, reverse_k)
     }
 
     pub fn sign_with_k(private_key: &PrivateKey, ephemeral_key: &PrivateKey, preimage: &[u8], hash_algo: SigningHash) -> Result<Signature, BSVErrors> {

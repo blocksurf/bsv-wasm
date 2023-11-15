@@ -22,7 +22,7 @@ impl PrivateKey {
      * Standard ECDSA Message Signing
      */
     pub(crate) fn sign_message_impl(&self, msg: &[u8]) -> Result<Signature, BSVErrors> {
-        ECDSA::sign_with_deterministic_k_impl(self, msg, SigningHash::Sha256, false, false)
+        ECDSA::sign_with_deterministic_k_impl(self, msg, SigningHash::Sha256, false)
     }
 
     pub(crate) fn to_wif_impl(&self) -> Result<String, BSVErrors> {

@@ -12,14 +12,3 @@ pub enum ScriptBit {
     PushData(OpCodes, #[serde(serialize_with = "to_hex", deserialize_with = "from_hex")] Vec<u8>),
     Coinbase(#[serde(serialize_with = "to_hex", deserialize_with = "from_hex")] Vec<u8>),
 }
-
-impl ScriptBit {
-    pub fn to_vec(&self) -> Option<Vec<u8>> {
-        match self {
-            ScriptBit::Push(v) => Some(v.to_owned()),
-            ScriptBit::PushData(_, v) => Some(v.to_owned()),
-            ScriptBit::Coinbase(v) => Some(v.to_owned()),
-            _ => None
-        }
-    }
-}

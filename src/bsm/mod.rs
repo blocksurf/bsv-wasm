@@ -30,7 +30,7 @@ impl BSM {
     pub(crate) fn sign_impl(priv_key: &PrivateKey, message: &[u8]) -> Result<Signature, BSVErrors> {
         let magic_message = BSM::prepend_magic_bytes(message)?;
         // let magic_message = message;
-        ECDSA::sign_with_deterministic_k_impl(priv_key, &magic_message, SigningHash::Sha256d, false, false)
+        ECDSA::sign_with_deterministic_k_impl(priv_key, &magic_message, SigningHash::Sha256d, false)
     }
 
     /**

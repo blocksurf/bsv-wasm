@@ -279,13 +279,13 @@ impl TxIn {
 
     // #[cfg_attr(all(feature = "wasm-bindgen-transaction"), wasm_bindgen(js_name = getSequenceAsBytes))]
     pub fn get_sequence_as_bytes(&self) -> Vec<u8> {
-        self.sequence.to_le_bytes().to_vec()
+        self.sequence.to_be_bytes().to_vec()
     }
 
     // #[cfg_attr(all(feature = "wasm-bindgen-transaction"), wasm_bindgen(js_name = getOutpointBytes))]
     pub fn get_outpoint_bytes(&self, little_endian: Option<bool>) -> Vec<u8> {
         let mut outpoint_bytes = self.get_prev_tx_id(little_endian);
-        outpoint_bytes.extend_from_slice(&self.vout.to_be_bytes());
+        outpoint_bytes.extend_from_slice(&self.vout.to_le_bytes());
         outpoint_bytes
     }
 
