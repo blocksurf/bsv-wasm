@@ -440,18 +440,18 @@ impl ECDSA {
         // however as Bitcoin signatures must use a low S value due to Bip 62, we
         // must account for both high and low S values in our equation.
         let mut k_s = r_inverse.wrapping_mul(&k.wrapping_mul(&s).wrapping_sub(&m)).wrapping_rem(&n);
-        let mut priv_p = PrivateKey::from_bytes_impl(&k_s.to_be_bytes()[96..])?;
+        let mut priv_p = PrivateKey::from_bytes_impl(&k_s.to_be_bytes()[96..], true)?;
         let mut pub_p = PublicKey::from_private_key_impl(&priv_p).to_bytes_impl()?;
         // Handle edge case for high S
         if pub_p != public_key.to_bytes_impl()? {
             k_s = r_inverse.wrapping_mul(&k.wrapping_mul(&n.wrapping_sub(&s)).wrapping_sub(&m)).wrapping_rem(&n);
-            priv_p = PrivateKey::from_bytes_impl(&k_s.to_be_bytes()[96..])?;
+            priv_p = PrivateKey::from_bytes_impl(&k_s.to_be_bytes()[96..], true)?;
             pub_p = PublicKey::from_private_key_impl(&priv_p).to_bytes_impl()?;
         }
         // Handle edge case for extremely low private key
         if pub_p != public_key.to_bytes_impl()? {
             k_s = r_inverse.wrapping_mul(&k.wrapping_mul(&n.wrapping_sub(&s)).wrapping_sub(&m.wrapping_add(&n))).wrapping_rem(&n);
-            priv_p = PrivateKey::from_bytes_impl(&k_s.to_be_bytes()[96..])?;
+            priv_p = PrivateKey::from_bytes_impl(&k_s.to_be_bytes()[96..], true)?;
             pub_p = PublicKey::from_private_key_impl(&priv_p).to_bytes_impl()?;
         }
         if pub_p == public_key.to_bytes_impl()? {

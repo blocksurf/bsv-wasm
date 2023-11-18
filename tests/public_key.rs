@@ -5,7 +5,7 @@ mod tests {
     #[test]
     fn pub_key_from_private_key() {
         // Arrange
-        let private_key = PrivateKey::from_hex("E9873D79C6D87DC0FB6A5778633389F4453213303DA61F20BD67FC233AA33262").unwrap();
+        let private_key = PrivateKey::from_hex("E9873D79C6D87DC0FB6A5778633389F4453213303DA61F20BD67FC233AA33262", true).unwrap();
 
         // Act
         let pub_key = PublicKey::from_private_key(&private_key);

@@ -8,7 +8,7 @@ mod xpriv_tests {
     fn xpriv_parts_to_xpriv_string() {
         // let seed = "4a6b71c77d6d37b5b95b10659632e64341b985fadb37f55668b4de3f404473b47ec36bfebd30d9195ae4580f73c09dd492acab731eafd7f236e41e4818531368";
         let parent_chain_code = hex::decode("05aae71d7c080474efaab01fa79e96f4c6cfe243237780b0df4bc36106228e31").unwrap();
-        let private_key = PrivateKey::from_hex("39f329fedba2a68e2a804fcd9aeea4104ace9080212a52ce8b52c1fb89850c72").unwrap();
+        let private_key = PrivateKey::from_hex("39f329fedba2a68e2a804fcd9aeea4104ace9080212a52ce8b52c1fb89850c72", true).unwrap();
         let parent_public_key = "0252c616d91a2488c1fd1f0f172e98f7d1f6e51f8f389b2f8d632a8b490d5f6da9";
         let parent_fingerprint = &Hash::hash_160(&hex::decode(parent_public_key).unwrap()).to_bytes()[0..4];
 
