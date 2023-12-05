@@ -52,7 +52,7 @@ features = ["getrandom"]
 
 [dependencies.getrandom]
 version = "^0.2"
-# features = ["js"]
+features = ["js"]
 
 [dev-dependencies]
 # wasm-bindgen-test = "^0.3"
