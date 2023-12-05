@@ -64,7 +64,7 @@ build-std = ['std', 'panic_abort']
 [build]
 target = "wasm32-unknown-unknown"
 #rustflags = ["-C", "target-feature=+simd128"] # bsv-wasm
-rustflags = ["-C", "target-feature=+simd128+atomics,+bulk-memory,+mutable-globals"] # rayon wasm
+rustflags = ["-C", "target-feature=+simd128,+atomics,+bulk-memory,+mutable-globals"] # rayon wasm
 
 [profile.release]
 opt-level = 3
