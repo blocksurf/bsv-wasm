@@ -74,7 +74,7 @@ mod tests {
         let key = PrivateKey::from_wif("L4rGfRz3Q994Xns9wWti75K2CjxrCuzCqUAwN6yW7ia9nj4SDG32").unwrap();
         let message = b"Hello";
 
-        let signature = ECDSA::sign_with_deterministic_k(&key, message, SigningHash::Sha256d, false).unwrap();
+        let signature = ECDSA::sign_with_deterministic_k(&key, message, SigningHash::Sha256d, false, false).unwrap();
 
         let pub_key = PublicKey::from_private_key(&key);
         let recovered_pub_key = signature.recover_public_key(message, SigningHash::Sha256d).unwrap();
@@ -87,7 +87,7 @@ mod tests {
         let key = PrivateKey::from_wif("L4rGfRz3Q994Xns9wWti75K2CjxrCuzCqUAwN6yW7ia9nj4SDG32").unwrap();
         let message = b"Hello";
 
-        let signature = ECDSA::sign_with_deterministic_k(&key, message, SigningHash::Sha256d, true).unwrap();
+        let signature = ECDSA::sign_with_deterministic_k(&key, message, SigningHash::Sha256d, true, false).unwrap();
 
         let pub_key = PublicKey::from_private_key(&key);
         let recovered_pub_key = signature.recover_public_key(message, SigningHash::Sha256d).unwrap();
