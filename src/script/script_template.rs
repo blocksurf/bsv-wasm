@@ -137,6 +137,9 @@ impl ScriptTemplate {
 
         Ok(ScriptTemplate(tokens?))
     }
+    pub fn from_match_tokens_impl(tokens: Vec<MatchToken>) -> Result<ScriptTemplate, ScriptTemplateErrors> {
+        Ok(ScriptTemplate(tokens))
+    }
 }
 
 impl ScriptTemplate {
@@ -146,6 +149,10 @@ impl ScriptTemplate {
 
     pub fn from_asm_string(asm: &str) -> Result<ScriptTemplate, ScriptTemplateErrors> {
         ScriptTemplate::from_asm_string_impl(asm)
+    }
+
+    pub fn from_match_tokens(tokens: Vec<MatchToken>) -> Result<ScriptTemplate, ScriptTemplateErrors> {
+        ScriptTemplate::from_match_tokens_impl(tokens)
     }
 }
 
