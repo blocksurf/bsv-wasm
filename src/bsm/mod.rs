@@ -57,7 +57,7 @@ impl BSM {
                 address_string, verify_address
             )));
         }
-        ECDSA::verify_digest_impl(&magic_message, &public_key, signature, SigningHash::Sha256d, reverse_k)?;
+        ECDSA::verify_digest_impl(&magic_message, &public_key, signature, SigningHash::Sha256d)?;
         Ok(true)
     }
 }
