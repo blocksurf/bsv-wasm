@@ -1,6 +1,6 @@
 [package]
 name = "bsv"
-version = "2.0.2"
+version = "2.1.0"
 authors = ["Firaenix <Nick.Carton@gmail.com>"]
 edition = "2021"
 description = "A Bitcoin stdlib"
@@ -52,14 +52,19 @@ features = ["getrandom"]
 
 [dependencies.getrandom]
 version = "^0.2"
-# features = ["js"]
+features = ["js"]
 
 [dev-dependencies]
 # wasm-bindgen-test = "^0.3"
 rayon = "1.5"
 
+[unstable]
+build-std = ['std', 'panic_abort']
+
 [build]
-rustflags = ["-C", "target-feature=+simd128"]
+target = "wasm32-unknown-unknown"
+#rustflags = ["-C", "target-feature=+simd128"] # bsv-wasm
+rustflags = ["-C", "target-feature=+simd128,+atomics,+bulk-memory,+mutable-globals"] # rayon wasm
 
 [profile.release]
 opt-level = 3

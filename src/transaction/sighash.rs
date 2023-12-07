@@ -1,10 +1,13 @@
+use crate::get_hash_digest;
 use crate::BSVErrors;
+use crate::ReversibleDigest;
 use crate::ECDSA;
 use std::convert::TryFrom;
 use std::io::Write;
 
 use crate::{transaction::*, Hash, PrivateKey, PublicKey, Script, Signature};
 use byteorder::{LittleEndian, WriteBytesExt};
+use digest::FixedOutput;
 use num_traits::{FromPrimitive, ToPrimitive};
 use serde::{Deserialize, Serialize};
 use strum_macros::EnumString;
@@ -324,6 +327,15 @@ impl Transaction {
 impl Transaction {
     pub fn verify(&self, pub_key: &PublicKey, sig: &SighashSignature, reverse_k: bool) -> bool {
         ECDSA::verify_digest_impl(&sig.sighash_buffer, pub_key, &sig.signature, crate::SigningHash::Sha256d, reverse_k).unwrap_or(false)
+    }
+
+    pub fn _verify(&self, pub_key: &PublicKey, sig: &SighashSignature, reverse_k: bool) -> bool {
+        let digest = get_hash_digest(crate::SigningHash::Sha256d, &sig.sighash_buffer);
+        let hashbuf = match reverse_k {
+            true => digest.reverse().finalize_fixed(),
+            false => digest.finalize_fixed(),
+        };
+        ECDSA::verify_hashbuf_impl(hashbuf, pub_key, &sig.signature).unwrap_or(false)
     }
 }
 

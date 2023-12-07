@@ -580,7 +580,7 @@ impl Interpreter {
     }
 }
 
-fn checksig(state: &mut State, mut txscript: &mut TxScript) -> Result<bool, InterpreterError> {
+fn checksig(state: &mut State, txscript: &mut TxScript) -> Result<bool, InterpreterError> {
     let public_key = state.stack.pop_bytes()?;
     let signature = state.stack.pop_bytes()?;
     let sighash_byte = signature.last().cloned();
@@ -589,8 +589,8 @@ fn checksig(state: &mut State, mut txscript: &mut TxScript) -> Result<bool, Inte
         Some(x) => SigHash::try_from(x).map_err(|_| InterpreterError::FailedToConvertSighash)?,
         None => return Err(InterpreterError::InvalidStackOperation("could not read Sighash flag from signature")),
     };
-    let preimage = calculate_sighash_preimage(&mut txscript, sighash, state.codeseparator_offset)?;
-    let is_signature_valid = verify_tx_signature(&preimage, txscript, &signature, &public_key, false)? || verify_tx_signature(&preimage, txscript, &signature, &public_key, true)?;
+    let preimage = calculate_sighash_preimage(txscript, sighash, state.codeseparator_offset)?;
+    let is_signature_valid = verify_tx_signature(&preimage, txscript, &signature, &public_key)?;
     Ok(is_signature_valid)
 }
 
@@ -632,7 +632,7 @@ fn multisig(state: &mut State, txscript: &mut TxScript) -> Result<bool, Interpre
 
         // Pop each pubkey because they are only to be compared against once.
         while let Some(public_key) = pubkeys.pop() {
-            let is_signature_valid = verify_tx_signature(&preimage, txscript, &sig, &public_key, false)? || verify_tx_signature(&preimage, txscript, &sig, &public_key, true)?;
+            let is_signature_valid = verify_tx_signature(&preimage, txscript, &sig, &public_key)?;
             if is_signature_valid {
                 successes += 1;
                 break;
@@ -642,9 +642,9 @@ fn multisig(state: &mut State, txscript: &mut TxScript) -> Result<bool, Interpre
     Ok(successes == sig_count)
 }
 
-fn verify_tx_signature(preimage: &[u8], txscript: &mut TxScript, signature: &[u8], public_key: &[u8], reverse_k: bool) -> Result<bool, InterpreterError> {
+fn verify_tx_signature(preimage: &[u8], txscript: &mut TxScript, signature: &[u8], public_key: &[u8]) -> Result<bool, InterpreterError> {
     let sighash_sig = SighashSignature::from_bytes_impl(signature, preimage)?;
-    let is_signature_valid = txscript.tx.verify(&PublicKey::from_bytes_impl(public_key)?, &sighash_sig, reverse_k);
+    let is_signature_valid = txscript.tx._verify(&PublicKey::from_bytes_impl(public_key)?, &sighash_sig, false) | txscript.tx._verify(&PublicKey::from_bytes_impl(public_key)?, &sighash_sig, true);
     Ok(is_signature_valid)
 }
 
