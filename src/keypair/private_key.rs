@@ -53,16 +53,19 @@ impl PrivateKey {
         Ok(bs58::encode(extended_key_bytes).into_string())
     }
 
-    pub(crate) fn from_bytes_impl(bytes: &[u8], is_pub_key_compressed: bool) -> Result<PrivateKey, BSVErrors> {
+    pub(crate) fn from_bytes_impl(bytes: &[u8]) -> Result<PrivateKey, BSVErrors> {
         let secret_key = SecretKey::from_be_bytes(bytes)?;
 
-        Ok(PrivateKey { secret_key, is_pub_key_compressed })
+        Ok(PrivateKey {
+            secret_key,
+            is_pub_key_compressed: true,
+        })
     }
 
-    pub(crate) fn from_hex_impl(hex_str: &str, is_pub_key_compressed: bool) -> Result<PrivateKey, BSVErrors> {
+    pub(crate) fn from_hex_impl(hex_str: &str) -> Result<PrivateKey, BSVErrors> {
         let bytes = hex::decode(hex_str)?;
 
-        Self::from_bytes_impl(&bytes, is_pub_key_compressed)
+        Self::from_bytes_impl(&bytes)
     }
 
     pub(crate) fn from_wif_impl(wif_string: &str) -> Result<PrivateKey, BSVErrors> {
@@ -98,7 +101,7 @@ impl PrivateKey {
             false => wif_without_checksum[1..].to_hex(),
         };
 
-        Ok(PrivateKey::from_hex_impl(&private_key_hex, is_compressed_pub_key)?.compress_public_key(is_compressed_pub_key))
+        Ok(PrivateKey::from_hex_impl(&private_key_hex)?.compress_public_key(is_compressed_pub_key))
     }
 
     pub(crate) fn to_public_key_impl(&self) -> Result<PublicKey, BSVErrors> {
@@ -176,8 +179,8 @@ impl PrivateKey {
         PrivateKey::from_wif_impl(wif_string)
     }
 
-    pub fn from_hex(hex_str: &str, is_pub_key_compressed: bool) -> Result<PrivateKey, BSVErrors> {
-        PrivateKey::from_hex_impl(hex_str, is_pub_key_compressed)
+    pub fn from_hex(hex_str: &str) -> Result<PrivateKey, BSVErrors> {
+        PrivateKey::from_hex_impl(hex_str)
     }
 
     /**
@@ -187,8 +190,8 @@ impl PrivateKey {
         PrivateKey::sign_message_impl(self, msg)
     }
 
-    pub fn from_bytes(bytes: &[u8], is_pub_key_compressed: bool) -> Result<PrivateKey, BSVErrors> {
-        Self::from_bytes_impl(bytes, is_pub_key_compressed)
+    pub fn from_bytes(bytes: &[u8]) -> Result<PrivateKey, BSVErrors> {
+        Self::from_bytes_impl(bytes)
     }
 
     pub fn to_public_key(&self) -> Result<PublicKey, BSVErrors> {

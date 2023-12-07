@@ -81,7 +81,7 @@ impl ExtendedPrivateKey {
 
         let mut private_key_bytes = vec![0; 32];
         cursor.read_exact(&mut private_key_bytes)?;
-        let private_key = PrivateKey::from_bytes_impl(&private_key_bytes, true)?;
+        let private_key = PrivateKey::from_bytes_impl(&private_key_bytes)?;
         let public_key = PublicKey::from_private_key_impl(&private_key);
 
         let mut checksum = vec![0; 4];
@@ -118,7 +118,7 @@ impl ExtendedPrivateKey {
             None => return Err(BSVErrors::InvalidSeedHmacError("Could not get 32 bytes for chain code".into())),
         };
 
-        let priv_key = PrivateKey::from_bytes_impl(private_key_bytes, true)?;
+        let priv_key = PrivateKey::from_bytes_impl(private_key_bytes)?;
 
         let pub_key = PublicKey::from_private_key_impl(&priv_key);
 
@@ -178,7 +178,7 @@ impl ExtendedPrivateKey {
         // child_private_key = il + parent_key % n
         let derived_private_key = parent_scalar.add(il_scalar);
 
-        let child_private_key = PrivateKey::from_bytes_impl(&derived_private_key.to_bytes(), true)?;
+        let child_private_key = PrivateKey::from_bytes_impl(&derived_private_key.to_bytes())?;
 
         let child_chain_code_bytes = child_chain_code.to_vec();
         let child_pub_key = PublicKey::from_private_key_impl(&child_private_key);

@@ -93,7 +93,7 @@ mod interpreter_signature_tests {
             "{} {} {} OP_3 OP_CHECKMULTISIG",
             &pk1.to_public_key().unwrap().to_hex().unwrap(),
             &pk2.to_public_key().unwrap().to_hex().unwrap(),
-            &pk3.to_public_key().unwrap().to_hex().unwrap(),
+            &pk3.to_public_key().unwrap().to_hex().unwrap()
         ))
         .unwrap();
 

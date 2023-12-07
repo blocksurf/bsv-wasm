@@ -49,7 +49,7 @@ mod tests {
 
     #[test]
     fn private_key_to_public_key_to_address() {
-        let priv_key = PrivateKey::from_hex("ef235aacf90d9f4aadd8c92e4b2562e1d9eb97f0df9ba3b508258739cb013db2", true).unwrap();
+        let priv_key = PrivateKey::from_hex("ef235aacf90d9f4aadd8c92e4b2562e1d9eb97f0df9ba3b508258739cb013db2").unwrap();
         let pub_key = PublicKey::from_private_key(&priv_key);
 
         let pub_key_hex = pub_key.to_hex().unwrap();
@@ -63,7 +63,7 @@ mod tests {
 
     #[test]
     fn from_address_string_to_string() {
-        let priv_key = PrivateKey::from_hex("ef235aacf90d9f4aadd8c92e4b2562e1d9eb97f0df9ba3b508258739cb013db2", true).unwrap();
+        let priv_key = PrivateKey::from_hex("ef235aacf90d9f4aadd8c92e4b2562e1d9eb97f0df9ba3b508258739cb013db2").unwrap();
         let pub_key = PublicKey::from_private_key(&priv_key);
 
         let pub_key_hex = pub_key.to_hex().unwrap();
