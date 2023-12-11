@@ -267,13 +267,6 @@ impl Script {
         self.0[0].eq(&ScriptBit::OpCode(OpCodes::OP_0)) && self.0[1].eq(&ScriptBit::OpCode(OpCodes::OP_RETURN))
     }
 
-    pub fn prepend_opcodes<T>(&mut self, op_codes: T)
-    where
-        T: IntoIterator<Item = ScriptBit>,
-    {
-        self.0.splice(0..0, op_codes);
-    }
-
     pub fn from_asm_string(asm: &str) -> Result<Script, BSVErrors> {
         let bits: Result<Vec<ScriptBit>, _> = asm.split(' ').filter(|x| !(x.is_empty() || x == &"\n" || x == &"\r")).map(Script::map_string_to_script_bit).collect();
         let bits = Script::if_statement_pass(&mut bits?.iter())?;
@@ -342,6 +335,13 @@ impl Script {
         self.0 = self.0.clone().into_iter().filter(|x| *x != ScriptBit::OpCode(OpCodes::OP_CODESEPARATOR)).collect();
     }
 
+    pub fn prepend_opcodes<T>(&mut self, op_codes: T)
+    where
+        T: IntoIterator<Item = ScriptBit>,
+    {
+        self.0.splice(0..0, op_codes);
+    }
+
     pub fn from_chunks(chunks: Vec<Vec<u8>>) -> Result<Script, BSVErrors> {
         Script::from_bytes(&chunks.into_iter().flatten().collect::<Vec<u8>>())
     }
@@ -356,6 +356,10 @@ impl Script {
 
     pub fn push_array(&mut self, code: &[ScriptBit]) {
         self.0.extend_from_slice(code);
+    }
+
+    pub fn extend_from(&mut self, script: &Script) {
+        self.0.extend_from_slice(&script.0)
     }
 
     pub fn to_scripthash_hex(&self) -> String {
