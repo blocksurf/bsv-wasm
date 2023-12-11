@@ -315,6 +315,10 @@ impl Script {
         Script::script_bits_to_bytes(&self.0)
     }
 
+    pub fn iter(&self) -> std::slice::Iter<'_, ScriptBit> {
+        self.0.iter()
+    }
+
     pub fn get_script_length(&self) -> usize {
         self.to_bytes().len()
     }
