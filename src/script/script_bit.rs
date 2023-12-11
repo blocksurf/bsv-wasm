@@ -1,5 +1,18 @@
-use crate::utils::{from_hex, to_hex};
-use crate::OpCodes;
+use std::{
+    io::{Cursor, Read},
+    slice::Iter,
+    str::FromStr,
+    usize,
+};
+
+use crate::{
+    utils::{from_hex, to_hex},
+    OpCodes, Script,
+};
+use crate::{BSVErrors, VarInt};
+use byteorder::{LittleEndian, ReadBytesExt, WriteBytesExt};
+use num_traits::{FromPrimitive, ToPrimitive};
+
 use serde::*;
 use strum_macros::Display;
 
@@ -111,10 +124,51 @@ impl ScriptBit {
         }
     }
 
+    pub fn to_hex(&self) -> String {
+        hex::encode(self.to_bytes())
+    }
+
     pub fn to_asm_string(&self) -> String {
         self.to_asm_string_impl(false)
     }
     pub fn to_extended_asm_string(&self) -> String {
         self.to_asm_string_impl(true)
+    }
+}
+
+impl ScriptBit {
+    pub fn from_bytes(bytes: &[u8]) -> Result<ScriptBit, BSVErrors> {
+        let mut cursor = Cursor::new(bytes);
+
+        if let Ok(byte) = cursor.read_u8() {
+            if byte.ne(&(OpCodes::OP_0 as u8)) && byte.lt(&(OpCodes::OP_PUSHDATA1 as u8)) {
+                let mut data: Vec<u8> = vec![0; byte as usize];
+                match cursor.read(&mut data) {
+                    Ok(len) => return Ok(ScriptBit::Push(data[..len].to_vec())),
+                    Err(e) => return Err(BSVErrors::DeserialiseScript(format!("Failed to read OP_PUSH data {}", e))),
+                }
+            }
+
+            match OpCodes::from_u8(byte) {
+                Some(v @ (OpCodes::OP_PUSHDATA1 | OpCodes::OP_PUSHDATA2 | OpCodes::OP_PUSHDATA4)) => {
+                    let data_length = match v {
+                        OpCodes::OP_PUSHDATA1 => cursor.read_u8()? as usize,
+                        OpCodes::OP_PUSHDATA2 => cursor.read_u16::<LittleEndian>()? as usize,
+                        _ => cursor.read_u32::<LittleEndian>()? as usize,
+                    };
+
+                    let mut data = vec![0; data_length];
+                    if let Err(e) = cursor.read(&mut data) {
+                        return Err(BSVErrors::DeserialiseScript(format!("Failed to read OP_PUSHDATA data {}", e)));
+                    }
+
+                    return Ok(ScriptBit::PushData(v, data));
+                }
+                Some(v) => return Ok(ScriptBit::OpCode(v)),
+                None => return Err(BSVErrors::DeserialiseScript(format!("Unknown opcode {}", byte))),
+            }
+        }
+
+        Err(BSVErrors::DeserialiseScript("Failed to decode ScriptBit".to_string()))
     }
 }
