@@ -267,6 +267,13 @@ impl Script {
         self.0[0].eq(&ScriptBit::OpCode(OpCodes::OP_0)) && self.0[1].eq(&ScriptBit::OpCode(OpCodes::OP_RETURN))
     }
 
+    pub fn prepend_opcodes<T>(&mut self, op_codes: T)
+    where
+        T: IntoIterator<Item = ScriptBit>,
+    {
+        self.0.splice(0..0, op_codes);
+    }
+
     pub fn from_asm_string(asm: &str) -> Result<Script, BSVErrors> {
         let bits: Result<Vec<ScriptBit>, _> = asm.split(' ').filter(|x| !(x.is_empty() || x == &"\n" || x == &"\r")).map(Script::map_string_to_script_bit).collect();
         let bits = Script::if_statement_pass(&mut bits?.iter())?;
@@ -383,4 +390,10 @@ impl Script {
     pub fn get_script_bit(&self, index: usize) -> Option<ScriptBit> {
         self.0.get(index).cloned()
     }
+}
+
+#[test]
+fn main() {
+    let mut script = Script::from_script_bits(vec![ScriptBit::PushData(OpCodes::OP_1, vec![1, 2, 3, 4, 5, 6, 7, 8]), ScriptBit::OpCode(OpCodes::OP_OR)]);
+    println!("{:?}", script);
 }
