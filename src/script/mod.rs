@@ -362,7 +362,7 @@ impl Script {
         self.0.extend_from_slice(&script.0)
     }
 
-    pub fn insert(&mut self, index: usize, code: ScriptBit) {
+    pub fn insert_at(&mut self, index: usize, code: ScriptBit) {
         self.0[index] = code
     }
 
