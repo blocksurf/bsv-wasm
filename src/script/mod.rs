@@ -400,8 +400,12 @@ impl Script {
     }
 }
 
-#[test]
-fn main() {
-    let mut script = Script::from_script_bits(vec![ScriptBit::PushData(OpCodes::OP_1, vec![1, 2, 3, 4, 5, 6, 7, 8]), ScriptBit::OpCode(OpCodes::OP_OR)]);
-    println!("{:?}", script);
+impl IntoIterator for Script {
+    type Item = ScriptBit;
+
+    type IntoIter = std::vec::IntoIter<Self::Item>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.0.into_iter()
+    }
 }
