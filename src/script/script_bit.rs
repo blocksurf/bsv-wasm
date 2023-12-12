@@ -27,7 +27,7 @@ pub enum ScriptBit {
 }
 
 impl ScriptBit {
-    pub fn to_vec(&self) -> Option<Vec<u8>> {
+    pub fn inner(&self) -> Option<Vec<u8>> {
         match self {
             ScriptBit::Push(v) => Some(v.to_owned()),
             ScriptBit::PushData(_, v) => Some(v.to_owned()),
@@ -36,7 +36,7 @@ impl ScriptBit {
         }
     }
 
-    pub fn to_bytes(&self) -> Vec<u8> {
+    pub fn to_vec(&self) -> Vec<u8> {
         match self {
             ScriptBit::OpCode(code) => vec![*code as u8],
             ScriptBit::Push(bytes) => {
@@ -60,13 +60,13 @@ impl ScriptBit {
                 let mut bytes = vec![*code as u8];
 
                 for bit in pass {
-                    bytes.extend_from_slice(&bit.to_bytes())
+                    bytes.extend_from_slice(&bit.to_vec())
                 }
 
                 if let Some(fail) = fail {
                     bytes.push(OpCodes::OP_ELSE as u8);
                     for bit in fail {
-                        bytes.extend_from_slice(&bit.to_bytes())
+                        bytes.extend_from_slice(&bit.to_vec())
                     }
                 }
                 bytes.push(OpCodes::OP_ENDIF as u8);
@@ -125,7 +125,7 @@ impl ScriptBit {
     }
 
     pub fn to_hex(&self) -> String {
-        hex::encode(self.to_bytes())
+        hex::encode(self.to_vec())
     }
 
     pub fn to_asm_string(&self) -> String {
