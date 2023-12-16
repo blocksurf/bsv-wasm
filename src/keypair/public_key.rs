@@ -42,7 +42,7 @@ impl PublicKey {
 
     pub(crate) fn to_hex_impl(&self) -> Result<String, BSVErrors> {
         let bytes = self.to_bytes_impl()?;
-        Ok(hex::encode(bytes))
+        Ok(hex_simd::encode_to_string(bytes, hex_simd::AsciiCase::Lower))
     }
 
     pub(crate) fn to_bytes_impl(&self) -> Result<Vec<u8>, BSVErrors> {
@@ -82,7 +82,7 @@ impl PublicKey {
     }
 
     pub(crate) fn from_hex_impl(hex_str: &str) -> Result<PublicKey, BSVErrors> {
-        let point_bytes = hex::decode(hex_str)?;
+        let point_bytes = hex_simd::decode_to_vec(hex_str)?;
         PublicKey::from_bytes_impl(&point_bytes)
     }
 

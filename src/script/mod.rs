@@ -38,12 +38,12 @@ impl Script {
                     false => 0.to_string(),
                 },
                 ScriptBit::Push(bytes) => match extended {
-                    true => format!("OP_PUSH {} {}", bytes.len(), hex::encode(bytes)),
-                    false => hex::encode(bytes),
+                    true => format!("OP_PUSH {} {}", bytes.len(), hex_simd::encode_to_string(bytes, hex_simd::AsciiCase::Lower)),
+                    false => hex_simd::encode_to_string(bytes, hex_simd::AsciiCase::Lower),
                 },
                 ScriptBit::PushData(code, bytes) => match extended {
-                    true => format!("{} {} {}", code, bytes.len(), hex::encode(bytes)),
-                    false => hex::encode(bytes),
+                    true => format!("{} {} {}", code, bytes.len(), hex_simd::encode_to_string(bytes, hex_simd::AsciiCase::Lower)),
+                    false => hex_simd::encode_to_string(bytes, hex_simd::AsciiCase::Lower),
                 },
                 ScriptBit::OpCode(code) => code.to_string(),
                 ScriptBit::If { code, pass, fail } => {
@@ -68,7 +68,7 @@ impl Script {
 
                     string_parts.join(" ")
                 }
-                ScriptBit::Coinbase(bytes) => hex::encode(bytes),
+                ScriptBit::Coinbase(bytes) => hex_simd::encode_to_string(bytes, hex_simd::AsciiCase::Lower),
             })
             .collect::<Vec<String>>()
             .join(" ")
@@ -121,7 +121,7 @@ impl Script {
     }
 
     pub fn from_hex(hex: &str) -> Result<Script, BSVErrors> {
-        Script::from_bytes(&hex::decode(hex)?)
+        Script::from_bytes(&hex_simd::decode_to_vec(hex)?)
     }
 
     pub fn from_bytes(bytes: &[u8]) -> Result<Script, BSVErrors> {
@@ -199,7 +199,7 @@ impl Script {
         }
 
         // PUSHDATA OP_CODES
-        let data_bytes = hex::decode(code)?;
+        let data_bytes = hex_simd::decode_to_vec(code)?;
         let bit = match VarInt::get_pushdata_opcode(data_bytes.len() as u64) {
             Some(v) => ScriptBit::PushData(v, data_bytes),
             None => ScriptBit::Push(data_bytes),
@@ -328,7 +328,7 @@ impl Script {
     }
 
     pub fn to_hex(&self) -> String {
-        hex::encode(self.to_bytes())
+        hex_simd::encode_to_string(self.to_bytes(), hex_simd::AsciiCase::Lower)
     }
 
     pub fn remove_codeseparators(&mut self) {
@@ -367,7 +367,7 @@ impl Script {
     }
 
     pub fn to_scripthash_hex(&self) -> String {
-        hex::encode(self.to_scripthash_bytes())
+        hex_simd::encode_to_string(self.to_scripthash_bytes(), hex_simd::AsciiCase::Lower)
     }
 
     pub fn to_scripthash_bytes(&self) -> Vec<u8> {

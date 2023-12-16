@@ -45,6 +45,7 @@ hmac = "^0.11.0"
 ripemd160 = "^0.9.1"
 digest = "^0.9.0"
 num-bigint = "0.4"
+hex-simd = "0.8.0"
 
 [dependencies.rand_core]
 version = "^0.6"

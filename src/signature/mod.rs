@@ -51,7 +51,7 @@ impl Signature {
     }
 
     pub(crate) fn from_hex_der_impl(hex: &str) -> Result<Signature, BSVErrors> {
-        let bytes = hex::decode(hex)?;
+        let bytes = hex_simd::decode_to_vec(hex)?;
         Signature::from_der_impl(&bytes)
     }
 
@@ -141,7 +141,7 @@ impl Signature {
     pub fn to_der_hex(&self) -> String {
         let bytes = self.sig.to_der();
 
-        hex::encode(bytes)
+        hex_simd::encode_to_string(bytes, hex_simd::AsciiCase::Lower)
     }
 
     /// DER representation of signature, does not contain any recovery information, so cannot be used for BSM
@@ -185,7 +185,7 @@ impl Signature {
 
     // #[cfg_attr(all(feature = "wasm-bindgen-signature"), wasm_bindgen(js_name = rHex))]
     pub fn r_hex(&self) -> String {
-        hex::encode(self.r())
+        hex_simd::encode_to_string(self.r(), hex_simd::AsciiCase::Lower)
     }
 
     // #[cfg_attr(all(feature = "wasm-bindgen-signature"), wasm_bindgen(js_name = s))]
@@ -195,13 +195,13 @@ impl Signature {
 
     // #[cfg_attr(all(feature = "wasm-bindgen-signature"), wasm_bindgen(js_name = sHex))]
     pub fn s_hex(&self) -> String {
-        hex::encode(self.s())
+        hex_simd::encode_to_string(self.s(), hex_simd::AsciiCase::Lower)
     }
 
     /// NOTE: Provide recovery info if the current signature object doesnt contain it.
     // #[cfg_attr(all(feature = "wasm-bindgen-signature"), wasm_bindgen(js_name = toCompactHex))]
     pub fn to_compact_hex(&self, recovery_info: Option<RecoveryInfo>) -> String {
-        hex::encode(self.to_compact_bytes(recovery_info))
+        hex_simd::encode_to_string(self.to_compact_bytes(recovery_info), hex_simd::AsciiCase::Lower)
     }
 
     // #[cfg_attr(all(feature = "wasm-bindgen-signature"), wasm_bindgen(js_name = verifyMessage))]

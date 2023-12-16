@@ -7,7 +7,7 @@ mod tests {
     fn private_key_to_address_verify() {
         // Arrange
         let pub_key_hash = "3c3fa3d4adcaf8f52d5b1843975e122548269937";
-        let pub_key_hash_bytes = hex::decode(pub_key_hash).unwrap();
+        let pub_key_hash_bytes = hex_simd::decode_to_vec(pub_key_hash).unwrap();
         let address = P2PKHAddress::from_pubkey_hash(&pub_key_hash_bytes).unwrap();
 
         // Act
@@ -21,7 +21,7 @@ mod tests {
     fn private_key_to_address_verify_2() {
         // Arrange
         let pub_key_hash = "47c6ad3495d35e6df17ccb06831cb44dbd570995";
-        let pub_key_hash_bytes = hex::decode(pub_key_hash).unwrap();
+        let pub_key_hash_bytes = hex_simd::decode_to_vec(pub_key_hash).unwrap();
         let address = P2PKHAddress::from_pubkey_hash(&pub_key_hash_bytes).unwrap();
 
         // Act
@@ -35,7 +35,7 @@ mod tests {
     fn pub_key_hash_to_pub_key_hash() {
         // Arrange
         let pub_key_hash = "47c6ad3495d35e6df17ccb06831cb44dbd570995";
-        let pub_key_hash_bytes = hex::decode(pub_key_hash).unwrap();
+        let pub_key_hash_bytes = hex_simd::decode_to_vec(pub_key_hash).unwrap();
         let address = P2PKHAddress::from_pubkey_hash(&pub_key_hash_bytes).unwrap();
 
         // Act

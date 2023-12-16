@@ -6,7 +6,7 @@ mod tests {
     #[test]
     fn import_signature() {
         let sig_hex = "3044022075fc517e541bd54769c080b64397e32161c850f6c1b2b67a5c433affbb3e62770220729e85cc46ffab881065ec07694220e71d4df9b2b8c8fd12c3122cf3a5efbcf2";
-        let sig = Signature::from_der(&hex::decode(sig_hex).unwrap()).unwrap();
+        let sig = Signature::from_der(&hex_simd::decode_to_vec(sig_hex).unwrap()).unwrap();
         assert_eq!(sig.to_der_hex(), sig_hex)
     }
 

@@ -176,7 +176,7 @@ impl Transaction {
                 // // This if statement is needed because of Consensus SIGHASH_SINGLE bug
                 // // https://bitcoinfiles.org/t/9a3a165cc7881bb2e37567dec5eaab64568a889e83e6b850b42f347e1d96a555
                 // if n_tx_in >= tx.outputs.len() {
-                //   return Ok(hex::decode("0000000000000000000000000000000000000000000000000000000000000001").map_err(|e| anyhow!(e))?)
+                //   return Ok(hex_simd::decode_to_vec("0000000000000000000000000000000000000000000000000000000000000001").map_err(|e| anyhow!(e))?)
                 // }
 
                 let txout = tx.get_output(n_tx_in).ok_or_else(|| BSVErrors::OutOfBounds(format!("Could not get TxOut at index {}", n_tx_in)))?;
@@ -361,7 +361,7 @@ pub struct SighashSignature {
 
 impl SighashSignature {
     pub(crate) fn to_hex_impl(&self) -> Result<String, BSVErrors> {
-        Ok(hex::encode(self.to_bytes_impl()?))
+        Ok(hex_simd::encode_to_string(self.to_bytes_impl()?, hex_simd::AsciiCase::Lower))
     }
 
     pub(crate) fn to_bytes_impl(&self) -> Result<Vec<u8>, BSVErrors> {

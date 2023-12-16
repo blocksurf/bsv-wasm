@@ -30,7 +30,7 @@ mod interpreter_utility_tests {
         let mut interpreter = Interpreter::from_script(&script);
         interpreter.run().unwrap();
 
-        assert_eq!(hex::encode(interpreter.state().stack().last().unwrap()), "abcdef4243");
+        assert_eq!(hex_simd::encode_to_string(interpreter.state().stack().last().unwrap(), hex_simd::AsciiCase::Lower), "abcdef4243");
     }
 
     #[test]
@@ -58,7 +58,10 @@ mod interpreter_utility_tests {
         let mut interpreter = Interpreter::from_script(&script);
         interpreter.run().unwrap();
 
-        assert_eq!(hex::encode(interpreter.state().stack().last().unwrap()), "abcdef42430000000000000000000000");
+        assert_eq!(
+            hex_simd::encode_to_string(interpreter.state().stack().last().unwrap(), hex_simd::AsciiCase::Lower),
+            "abcdef42430000000000000000000000"
+        );
     }
 
     #[test]
@@ -72,7 +75,7 @@ mod interpreter_utility_tests {
         let mut interpreter = Interpreter::from_script(&script);
         interpreter.run().unwrap();
 
-        assert_eq!(hex::encode(interpreter.state().stack().last().unwrap()), "2168");
+        assert_eq!(hex_simd::encode_to_string(interpreter.state().stack().last().unwrap(), hex_simd::AsciiCase::Lower), "2168");
     }
 
     #[test]
@@ -86,6 +89,9 @@ mod interpreter_utility_tests {
         let mut interpreter = Interpreter::from_script(&script);
         interpreter.run().unwrap();
 
-        assert_eq!(hex::encode(interpreter.state().stack().last().unwrap()), "21680000000000000000000000000000");
+        assert_eq!(
+            hex_simd::encode_to_string(interpreter.state().stack().last().unwrap(), hex_simd::AsciiCase::Lower),
+            "21680000000000000000000000000000"
+        );
     }
 }

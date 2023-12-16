@@ -4,12 +4,12 @@ pub trait ToHex {
 
 impl ToHex for Vec<u8> {
     fn to_hex(&self) -> String {
-        hex::encode(self)
+        hex_simd::encode_to_string(self, hex_simd::AsciiCase::Lower)
     }
 }
 
 impl ToHex for [u8] {
     fn to_hex(&self) -> String {
-        hex::encode(self)
+        hex_simd::encode_to_string(self, hex_simd::AsciiCase::Lower)
     }
 }

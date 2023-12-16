@@ -87,12 +87,12 @@ impl ScriptBit {
                 _ => code.to_string(),
             },
             ScriptBit::Push(bytes) => match extended {
-                true => format!("OP_PUSH {} {}", bytes.len(), hex::encode(bytes)),
-                false => hex::encode(bytes),
+                true => format!("OP_PUSH {} {}", bytes.len(), hex_simd::encode_to_string(bytes, hex_simd::AsciiCase::Lower)),
+                false => hex_simd::encode_to_string(bytes, hex_simd::AsciiCase::Lower),
             },
             ScriptBit::PushData(code, bytes) => match extended {
-                true => format!("{} {} {}", code, bytes.len(), hex::encode(bytes)),
-                false => hex::encode(bytes),
+                true => format!("{} {} {}", code, bytes.len(), hex_simd::encode_to_string(bytes, hex_simd::AsciiCase::Lower)),
+                false => hex_simd::encode_to_string(bytes, hex_simd::AsciiCase::Lower),
             },
             ScriptBit::If { code, pass, fail } => {
                 let mut string_parts = vec![];
@@ -120,12 +120,12 @@ impl ScriptBit {
 
                 string_parts.join(" ")
             }
-            ScriptBit::Coinbase(bytes) => hex::encode(bytes),
+            ScriptBit::Coinbase(bytes) => hex_simd::encode_to_string(bytes, hex_simd::AsciiCase::Lower),
         }
     }
 
     pub fn to_hex(&self) -> String {
-        hex::encode(self.to_vec())
+        hex_simd::encode_to_string(self.to_vec(), hex_simd::AsciiCase::Lower)
     }
 
     pub fn to_asm_string(&self) -> String {

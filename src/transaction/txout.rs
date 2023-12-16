@@ -12,7 +12,7 @@ pub struct TxOut {
 
 impl TxOut {
     pub(crate) fn from_hex_impl(hex_str: &str) -> Result<TxOut, BSVErrors> {
-        let txout_bytes = hex::decode(hex_str)?;
+        let txout_bytes = hex_simd::decode_to_vec(hex_str)?;
 
         let mut cursor = Cursor::new(txout_bytes);
 
@@ -61,7 +61,7 @@ impl TxOut {
     }
 
     pub(crate) fn to_hex_impl(&self) -> Result<String, BSVErrors> {
-        Ok(hex::encode(self.to_bytes_impl()?))
+        Ok(hex_simd::encode_to_string(self.to_bytes_impl()?, hex_simd::AsciiCase::Lower))
     }
 
     pub(crate) fn to_json_string_impl(&self) -> Result<String, BSVErrors> {

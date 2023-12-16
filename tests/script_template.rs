@@ -67,7 +67,7 @@ mod script_template_tests {
         assert_eq!(extracted.len(), 1);
 
         match &extracted[0] {
-            (MatchDataTypes::PublicKeyHash, v) => assert_eq!(v, &hex::decode("05186ff0711831d110ca96ddfc47816b5a31900d").unwrap()),
+            (MatchDataTypes::PublicKeyHash, v) => assert_eq!(v, &hex_simd::decode_to_vec("05186ff0711831d110ca96ddfc47816b5a31900d").unwrap()),
             _ => assert!(false, "Index 0 did not contain a PubKeyHash"),
         }
     }
@@ -88,7 +88,7 @@ mod script_template_tests {
         match &extracted[0] {
             (MatchDataTypes::Data, v) => {
                 assert_eq!(v.len(), 32, "Data was not 32 bytes long");
-                assert_eq!(v, &hex::decode("d26f2b12ee0a5923dab7314e533917f2ab5b50da5ce302d3d60941f0ee8000a2").unwrap())
+                assert_eq!(v, &hex_simd::decode_to_vec("d26f2b12ee0a5923dab7314e533917f2ab5b50da5ce302d3d60941f0ee8000a2").unwrap())
             }
             _ => assert!(false, "Index 0 did not contain Data"),
         }
@@ -110,7 +110,7 @@ mod script_template_tests {
         match &extracted[0] {
             (MatchDataTypes::Data, v) => {
                 assert_eq!(v.len(), 32, "Data was not 32 bytes long");
-                assert_eq!(v, &hex::decode("d26f2b12ee0a5923dab7314e533917f2ab5b50da5ce302d3d60941f0ee8000a2").unwrap())
+                assert_eq!(v, &hex_simd::decode_to_vec("d26f2b12ee0a5923dab7314e533917f2ab5b50da5ce302d3d60941f0ee8000a2").unwrap())
             }
             _ => assert!(false, "Index 0 did not contain Data"),
         }
@@ -118,7 +118,7 @@ mod script_template_tests {
         match &extracted[1] {
             (MatchDataTypes::Data, v) => {
                 assert_eq!(v.len(), 2, "Data was not 2 bytes long");
-                assert_eq!(v, &hex::decode("21e8").unwrap())
+                assert_eq!(v, &hex_simd::decode_to_vec("21e8").unwrap())
             }
             _ => assert!(false, "Index 1 did not contain Data"),
         }
@@ -161,7 +161,7 @@ mod script_template_tests {
         match &extracted[0] {
             (MatchDataTypes::PublicKey, v) => {
                 assert_eq!(v.len(), 33, "Data was not 32 bytes long");
-                assert_eq!(v, &hex::decode("03652aee2d0a773eccc4bc5f7816bd4c525f408da26422171a22829bfde4109296").unwrap())
+                assert_eq!(v, &hex_simd::decode_to_vec("03652aee2d0a773eccc4bc5f7816bd4c525f408da26422171a22829bfde4109296").unwrap())
             }
             _ => assert!(false, "Index 0 did not contain Data"),
         }
@@ -184,7 +184,7 @@ mod script_template_tests {
                 assert_eq!(v.len(), 65, "Data was not 65 bytes long");
                 assert_eq!(
                     v,
-                    &hex::decode("04652aee2d0a773eccc4bc5f7816bd4c525f408da26422171a22829bfde41092967872982dc75cb2d4b5162f17e97cdcf4329e9fa4ef1b3cba155ccdb600d199b1").unwrap()
+                    &hex_simd::decode_to_vec("04652aee2d0a773eccc4bc5f7816bd4c525f408da26422171a22829bfde41092967872982dc75cb2d4b5162f17e97cdcf4329e9fa4ef1b3cba155ccdb600d199b1").unwrap()
                 )
             }
             _ => assert!(false, "Index 0 did not contain PubKey"),
@@ -208,7 +208,7 @@ mod script_template_tests {
                 assert_eq!(v.len(), 65, "Data was not 65 bytes long");
                 assert_eq!(
                     v,
-                    &hex::decode("04652aee2d0a773eccc4bc5f7816bd4c525f408da26422171a22829bfde41092967872982dc75cb2d4b5162f17e97cdcf4329e9fa4ef1b3cba155ccdb600d199b1").unwrap()
+                    &hex_simd::decode_to_vec("04652aee2d0a773eccc4bc5f7816bd4c525f408da26422171a22829bfde41092967872982dc75cb2d4b5162f17e97cdcf4329e9fa4ef1b3cba155ccdb600d199b1").unwrap()
                 )
             }
             _ => assert!(false, "Index 0 did not contain PubKey"),
@@ -217,7 +217,7 @@ mod script_template_tests {
         match &extracted[1] {
             (MatchDataTypes::PublicKey, v) => {
                 assert_eq!(v.len(), 33, "Data was not 33 bytes long");
-                assert_eq!(v, &hex::decode("03652aee2d0a773eccc4bc5f7816bd4c525f408da26422171a22829bfde4109296").unwrap())
+                assert_eq!(v, &hex_simd::decode_to_vec("03652aee2d0a773eccc4bc5f7816bd4c525f408da26422171a22829bfde4109296").unwrap())
             }
             _ => assert!(false, "Index 1 did not contain PubKey"),
         }
@@ -225,7 +225,7 @@ mod script_template_tests {
         match &extracted[2] {
             (MatchDataTypes::PublicKeyHash, v) => {
                 assert_eq!(v.len(), 20, "Data was not 20 bytes long");
-                assert_eq!(v, &hex::decode("05186ff0711831d110ca96ddfc47816b5a31900d").unwrap())
+                assert_eq!(v, &hex_simd::decode_to_vec("05186ff0711831d110ca96ddfc47816b5a31900d").unwrap())
             }
             _ => assert!(false, "Index 1 did not contain PubKeyHash"),
         }
@@ -248,7 +248,7 @@ mod script_template_tests {
                 assert_eq!(v.len(), 71, "Signature was not 71 bytes long");
                 assert_eq!(
                     v,
-                    &hex::decode("304402206173a490a5e62036e64f77f8c98db6c57f162a68147cb276bc61da589a114e27022053c19c60dbe7a97ce609631071ee5293c6e6bf4b859094c25a3385490f772c5541").unwrap()
+                    &hex_simd::decode_to_vec("304402206173a490a5e62036e64f77f8c98db6c57f162a68147cb276bc61da589a114e27022053c19c60dbe7a97ce609631071ee5293c6e6bf4b859094c25a3385490f772c5541").unwrap()
                 )
             }
             _ => assert!(false, "Index 0 did not contain Signature"),
@@ -257,7 +257,7 @@ mod script_template_tests {
         match &extracted[1] {
             (MatchDataTypes::PublicKey, v) => {
                 assert_eq!(v.len(), 33, "PubKey was not 33 bytes long");
-                assert_eq!(v, &hex::decode("0319a38fb498ff221b6e1b528b911c62f6ff2ac5023405c637859e4d7ff28f265d").unwrap())
+                assert_eq!(v, &hex_simd::decode_to_vec("0319a38fb498ff221b6e1b528b911c62f6ff2ac5023405c637859e4d7ff28f265d").unwrap())
             }
             _ => assert!(false, "Index 1 did not contain PublicKey"),
         }
@@ -265,7 +265,7 @@ mod script_template_tests {
         match &extracted[2] {
             (MatchDataTypes::PublicKeyHash, v) => {
                 assert_eq!(v.len(), 20, "PubKeyHash was not 20 bytes long");
-                assert_eq!(v, &hex::decode("08ed73ac2a3564dd1a431c61f7c2ce6b64e1fe80").unwrap())
+                assert_eq!(v, &hex_simd::decode_to_vec("08ed73ac2a3564dd1a431c61f7c2ce6b64e1fe80").unwrap())
             }
             _ => assert!(false, "Index 2 did not contain PublicKeyHash"),
         }
@@ -286,7 +286,7 @@ mod script_template_tests {
         match &extracted[0] {
             (MatchDataTypes::Data, v) => {
                 assert_eq!(v.len(), 20, "Data was not 20 bytes long");
-                assert_eq!(v, &hex::decode("b8bcb07f6344b42ab04250c86a6e8b75d3fdbbc6").unwrap())
+                assert_eq!(v, &hex_simd::decode_to_vec("b8bcb07f6344b42ab04250c86a6e8b75d3fdbbc6").unwrap())
             }
             _ => assert!(false, "Index 0 did not contain Signature"),
         }
@@ -294,14 +294,14 @@ mod script_template_tests {
         match &extracted[1] {
             (MatchDataTypes::PublicKeyHash, v) => {
                 assert_eq!(v.len(), 20, "PubKeyhash was not 20 bytes long");
-                assert_eq!(v, &hex::decode("f9dfc5a4ae5256e5938c2d819738f7b57e4d7b46").unwrap())
+                assert_eq!(v, &hex_simd::decode_to_vec("f9dfc5a4ae5256e5938c2d819738f7b57e4d7b46").unwrap())
             }
             _ => assert!(false, "Index 1 did not contain PubKeyhash"),
         }
 
         match &extracted[2] {
             (MatchDataTypes::Data, v) => {
-                assert_eq!(v, &hex::decode("7b227469746c65223a22547572626f20466f78202331222c226465736372697074696f6e223a225765206c696b652074686520666f78222c226e756d626572223a312c22736572696573223a36392c22696d616765223a22623a2f2f33376136636339636639613461613662356632316534333331363935666666613466323039363335366239633636336436393636333962336363303765376531222c2261747472696275746573223a5b7b2274726169745f74797065223a22436f6c6f72222c2276616c7565223a224f72616e6765227d2c7b2274726169745f74797065223a22446975726e616c697479222c2276616c7565223a22446179227d5d7d").unwrap())
+                assert_eq!(v, &hex_simd::decode_to_vec("7b227469746c65223a22547572626f20466f78202331222c226465736372697074696f6e223a225765206c696b652074686520666f78222c226e756d626572223a312c22736572696573223a36392c22696d616765223a22623a2f2f33376136636339636639613461613662356632316534333331363935666666613466323039363335366239633636336436393636333962336363303765376531222c2261747472696275746573223a5b7b2274726169745f74797065223a22436f6c6f72222c2276616c7565223a224f72616e6765227d2c7b2274726169745f74797065223a22446975726e616c697479222c2276616c7565223a22446179227d5d7d").unwrap())
             }
             _ => assert!(false, "Index 2 did not contain Data"),
         }

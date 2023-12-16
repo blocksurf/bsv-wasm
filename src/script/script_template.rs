@@ -25,6 +25,13 @@ pub enum ScriptTemplateErrors {
         #[source]
         FromHexError,
     ),
+
+    #[error("{0}")]
+    SimdHex(
+        #[from]
+        #[source]
+        hex_simd::Error,
+    ),
 }
 
 #[derive(Debug, Clone, Display)]
@@ -119,7 +126,7 @@ impl ScriptTemplate {
         }
 
         // PUSHDATA OP_CODES
-        let data_bytes = hex::decode(code)?;
+        let data_bytes = hex_simd::decode_to_vec(code)?;
         let token = match VarInt::get_pushdata_opcode(data_bytes.len() as u64) {
             Some(v) => MatchToken::PushData(v, data_bytes),
             None => MatchToken::Push(data_bytes),
@@ -262,7 +269,7 @@ impl Script {
     /// match &extracted[0] {
     ///    (MatchDataTypes::Data, v) => {
     ///        assert_eq!(v.len(), 20, "Data was not 20 bytes long");
-    ///        assert_eq!(v, &hex::decode("b8bcb07f6344b42ab04250c86a6e8b75d3fdbbc6").unwrap())
+    ///        assert_eq!(v, &hex_simd::decode_to_vec("b8bcb07f6344b42ab04250c86a6e8b75d3fdbbc6").unwrap())
     ///    }
     ///    _ => assert!(false, "Index 0 did not contain Signature"),
     /// }

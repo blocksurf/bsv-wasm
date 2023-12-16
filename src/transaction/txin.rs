@@ -70,7 +70,7 @@ impl TxIn {
     }
 
     pub(crate) fn from_hex_impl(hex_str: &str) -> Result<TxIn, BSVErrors> {
-        let txin_bytes = hex::decode(hex_str)?;
+        let txin_bytes = hex_simd::decode_to_vec(hex_str)?;
 
         let mut cursor = Cursor::new(txin_bytes);
 
@@ -169,7 +169,7 @@ impl TxIn {
     }
 
     pub(crate) fn to_hex_impl(&self) -> Result<String, BSVErrors> {
-        Ok(hex::encode(self.to_bytes_impl()?))
+        Ok(hex_simd::encode_to_string(self.to_bytes_impl()?, hex_simd::AsciiCase::Lower))
     }
 
     pub(crate) fn to_json_string_impl(&self) -> Result<String, BSVErrors> {
@@ -249,7 +249,7 @@ impl TxIn {
 
     // #[cfg_attr(all(feature = "wasm-bindgen-transaction"), wasm_bindgen(js_name = getPrevTxIdHex))]
     pub fn get_prev_tx_id_hex(&self, little_endian: Option<bool>) -> String {
-        hex::encode(self.get_prev_tx_id(little_endian))
+        hex_simd::encode_to_string(self.get_prev_tx_id(little_endian), hex_simd::AsciiCase::Lower)
     }
 
     // #[cfg_attr(all(feature = "wasm-bindgen-transaction"), wasm_bindgen(js_name = getVOut))]
@@ -269,7 +269,7 @@ impl TxIn {
 
     // #[cfg_attr(all(feature = "wasm-bindgen-transaction"), wasm_bindgen(js_name = getUnlockingScriptHex))]
     pub fn get_unlocking_script_hex(&self) -> String {
-        hex::encode(self.unlocking_script.to_bytes())
+        hex_simd::encode_to_string(self.unlocking_script.to_bytes(), hex_simd::AsciiCase::Lower)
     }
 
     // #[cfg_attr(all(feature = "wasm-bindgen-transaction"), wasm_bindgen(js_name = getSequence))]
@@ -291,7 +291,7 @@ impl TxIn {
 
     // #[cfg_attr(all(feature = "wasm-bindgen-transaction"), wasm_bindgen(js_name = getOutpointHex))]
     pub fn get_outpoint_hex(&self, little_endian: Option<bool>) -> String {
-        hex::encode(self.get_outpoint_bytes(little_endian))
+        hex_simd::encode_to_string(self.get_outpoint_bytes(little_endian), hex_simd::AsciiCase::Lower)
     }
 
     // #[cfg_attr(all(feature = "wasm-bindgen-transaction"), wasm_bindgen(js_name = setUnlockingScript))]
@@ -387,7 +387,7 @@ impl TxIn {
 
 //     #[cfg_attr(all(feature = "wasm-bindgen-transaction"), wasm_bindgen(js_name = toCompactHex))]
 //     pub fn to_compact_hex(&self) -> Result<String, wasm_bindgen::JsError> {
-//         Ok(hex::encode(self.to_compact_bytes_impl()?))
+//         Ok(hex_simd::encode_to_string(self.to_compact_bytes_impl()?))
 //     }
 
 //     /**
@@ -403,7 +403,7 @@ impl TxIn {
 //      */
 //     #[cfg_attr(all(feature = "wasm-bindgen-transaction"), wasm_bindgen(js_name = fromCompactHex))]
 //     pub fn from_compact_hex(compact_hex: String) -> Result<TxIn, wasm_bindgen::JsError> {
-//         let compact_buffer = hex::decode(compact_hex)?;
+//         let compact_buffer = hex_simd::decode_to_vec(compact_hex)?;
 
 //         Ok(TxIn::from_compact_bytes_impl(&compact_buffer)?)
 //     }
@@ -455,14 +455,14 @@ impl TxIn {
      * Serialises this entire transaction to CBOR Hex, preserving all fields from the standard Transaction format + XT
      */
     pub fn to_compact_hex(&self) -> Result<String, BSVErrors> {
-        Ok(hex::encode(self.to_compact_bytes_impl()?))
+        Ok(hex_simd::encode_to_string(self.to_compact_bytes_impl()?, hex_simd::AsciiCase::Lower))
     }
 
     /**
      * Deserialises the provided CBOR hex to the XT format
      */
     pub fn from_compact_hex(compact_hex: &str) -> Result<Self, BSVErrors> {
-        let compact_buffer = hex::decode(compact_hex)?;
+        let compact_buffer = hex_simd::decode_to_vec(compact_hex)?;
         TxIn::from_compact_bytes_impl(&compact_buffer)
     }
 

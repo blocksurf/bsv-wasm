@@ -28,6 +28,13 @@ pub enum BSVErrors {
     ),
 
     #[error("{0}")]
+    HexSimdDecode(
+        #[source]
+        #[from]
+        hex_simd::Error,
+    ),
+
+    #[error("{0}")]
     Base58Decode(
         #[source]
         #[from]

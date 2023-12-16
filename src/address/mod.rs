@@ -139,7 +139,7 @@ impl P2PKHAddress {
 
     // #[cfg_attr(all(feature = "wasm-bindgen-address"), wasm_bindgen(js_name = toPubKeyHashHex))]
     pub fn to_pubkey_hash_hex(&self) -> String {
-        hex::encode(self.1)
+        hex_simd::encode_to_string(self.1, hex_simd::AsciiCase::Lower)
     }
 
     /**

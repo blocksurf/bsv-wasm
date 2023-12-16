@@ -37,7 +37,7 @@ impl PrivateKey {
         };
 
         // 3. SHA256d
-        let bytes = hex::decode(padded_hex.clone())?;
+        let bytes = hex_simd::decode_to_vec(padded_hex.clone())?;
 
         let shad_hex = Hash::sha_256d(&bytes).to_bytes();
 
@@ -48,7 +48,7 @@ impl PrivateKey {
         let extended_key = format!("{}{}", padded_hex, checksum);
 
         // 6 Base58 Result
-        let extended_key_bytes = hex::decode(extended_key)?;
+        let extended_key_bytes = hex_simd::decode_to_vec(extended_key)?;
 
         Ok(bs58::encode(extended_key_bytes).into_string())
     }
@@ -63,7 +63,7 @@ impl PrivateKey {
     }
 
     pub(crate) fn from_hex_impl(hex_str: &str) -> Result<PrivateKey, BSVErrors> {
-        let bytes = hex::decode(hex_str)?;
+        let bytes = hex_simd::decode_to_vec(hex_str)?;
 
         Self::from_bytes_impl(&bytes)
     }
@@ -138,7 +138,7 @@ impl PrivateKey {
     // #[cfg_attr(all(feature = "wasm-bindgen-keypair"), wasm_bindgen(js_name = toHex))]
     pub fn to_hex(&self) -> String {
         let secret_key_bytes = self.to_bytes();
-        hex::encode(secret_key_bytes)
+        hex_simd::encode_to_string(secret_key_bytes, hex_simd::AsciiCase::Lower)
     }
 
     // #[cfg_attr(all(feature = "wasm-bindgen-keypair"), wasm_bindgen(js_name = fromRandom))]

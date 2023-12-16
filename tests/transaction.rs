@@ -15,18 +15,21 @@ mod transaction_tests {
 
         let tx_in_0 = tx.get_input(0).unwrap();
 
-        assert_eq!(tx_in_0.get_prev_tx_id(None), hex::decode("3f36d1e82cd2f327970c84cbf0d4e4d116f9a15dd02259329ac40d7b6a018d9e").unwrap());
+        assert_eq!(
+            tx_in_0.get_prev_tx_id(None),
+            hex_simd::decode_to_vec("3f36d1e82cd2f327970c84cbf0d4e4d116f9a15dd02259329ac40d7b6a018d9e").unwrap()
+        );
         assert_eq!(tx_in_0.get_vout(), 0);
         assert_eq!(tx_in_0.get_unlocking_script_size(), 0x8c);
         assert_eq!(tx_in_0.get_unlocking_script().to_bytes().len(), 0x8c);
-        assert_eq!(tx_in_0.get_unlocking_script().to_bytes(), hex::decode("493046022100e9318720bee5425378b4763b0427158b1051eec8b08442ce3fbfbf7b30202a44022100d4172239ebd701dae2fbaaccd9f038e7ca166707333427e3fb2a2865b19a7f27014104510c67f46d2cbb29476d1f0b794be4cb549ea59ab9cc1e731969a7bf5be95f7ad5e7f904e5ccf50a9dc1714df00fbeb794aa27aaff33260c1032d931a75c56f2").unwrap());
+        assert_eq!(tx_in_0.get_unlocking_script().to_bytes(), hex_simd::decode_to_vec("493046022100e9318720bee5425378b4763b0427158b1051eec8b08442ce3fbfbf7b30202a44022100d4172239ebd701dae2fbaaccd9f038e7ca166707333427e3fb2a2865b19a7f27014104510c67f46d2cbb29476d1f0b794be4cb549ea59ab9cc1e731969a7bf5be95f7ad5e7f904e5ccf50a9dc1714df00fbeb794aa27aaff33260c1032d931a75c56f2").unwrap());
         assert_eq!(tx_in_0.get_sequence(), 4294967295);
 
         let tx_in_1 = tx.get_input(1).unwrap();
         assert_eq!(tx_in_1.get_vout(), 2);
         assert_eq!(tx_in_1.get_unlocking_script_size(), 0x8b);
         assert_eq!(tx_in_1.get_unlocking_script().to_bytes().len(), 0x8b);
-        assert_eq!(tx_in_1.get_unlocking_script().to_bytes(), hex::decode("48304502201c282f35f3e02a1f32d2089265ad4b561f07ea3c288169dedcf2f785e6065efa022100e8db18aadacb382eed13ee04708f00ba0a9c40e3b21cf91da8859d0f7d99e0c50141042b409e1ebbb43875be5edde9c452c82c01e3903d38fa4fd89f3887a52cb8aea9dc8aec7e2c9d5b3609c03eb16259a2537135a1bf0f9c5fbbcbdbaf83ba402442").unwrap());
+        assert_eq!(tx_in_1.get_unlocking_script().to_bytes(), hex_simd::decode_to_vec("48304502201c282f35f3e02a1f32d2089265ad4b561f07ea3c288169dedcf2f785e6065efa022100e8db18aadacb382eed13ee04708f00ba0a9c40e3b21cf91da8859d0f7d99e0c50141042b409e1ebbb43875be5edde9c452c82c01e3903d38fa4fd89f3887a52cb8aea9dc8aec7e2c9d5b3609c03eb16259a2537135a1bf0f9c5fbbcbdbaf83ba402442").unwrap());
         assert_eq!(tx_in_1.get_sequence(), 4294967295);
 
         let tx_out_0 = tx.get_output(0).unwrap();
@@ -262,7 +265,7 @@ mod transaction_tests {
         // Arrange
         let mut tx = Transaction::new(1, 0);
         let mut txin_1 = TxIn::new(
-            &hex::decode("4fe512f97769bc2fe47b0dadb1767404ebe2be50b3ea39a9b93d6325ee287e9a").unwrap(),
+            &hex_simd::decode_to_vec("4fe512f97769bc2fe47b0dadb1767404ebe2be50b3ea39a9b93d6325ee287e9a").unwrap(),
             0,
             &Script::default(),
             Some(u32::MAX),
@@ -270,7 +273,7 @@ mod transaction_tests {
         txin_1.set_satoshis(500);
         tx.add_input(&txin_1);
         let mut txin_2 = TxIn::new(
-            &hex::decode("4fe512f97769bc2fe47b0dadb1767404ebe2be50b3ea39a9b93d6325ee287e9a").unwrap(),
+            &hex_simd::decode_to_vec("4fe512f97769bc2fe47b0dadb1767404ebe2be50b3ea39a9b93d6325ee287e9a").unwrap(),
             0,
             &Script::default(),
             Some(u32::MAX),
@@ -278,7 +281,7 @@ mod transaction_tests {
         txin_2.set_satoshis(500);
         tx.add_input(&txin_2);
         let mut txin_3 = TxIn::new(
-            &hex::decode("4fe512f97769bc2fe47b0dadb1767404ebe2be50b3ea39a9b93d6325ee287e9a").unwrap(),
+            &hex_simd::decode_to_vec("4fe512f97769bc2fe47b0dadb1767404ebe2be50b3ea39a9b93d6325ee287e9a").unwrap(),
             0,
             &Script::default(),
             Some(u32::MAX),
@@ -294,7 +297,7 @@ mod transaction_tests {
         // Arrange
         let mut tx = Transaction::new(1, 0);
         let mut txin_1 = TxIn::new(
-            &hex::decode("4fe512f97769bc2fe47b0dadb1767404ebe2be50b3ea39a9b93d6325ee287e9a").unwrap(),
+            &hex_simd::decode_to_vec("4fe512f97769bc2fe47b0dadb1767404ebe2be50b3ea39a9b93d6325ee287e9a").unwrap(),
             0,
             &Script::default(),
             Some(u32::MAX),
@@ -302,14 +305,14 @@ mod transaction_tests {
         txin_1.set_satoshis(500);
         tx.add_input(&txin_1);
         let txin_2 = TxIn::new(
-            &hex::decode("4fe512f97769bc2fe47b0dadb1767404ebe2be50b3ea39a9b93d6325ee287e9a").unwrap(),
+            &hex_simd::decode_to_vec("4fe512f97769bc2fe47b0dadb1767404ebe2be50b3ea39a9b93d6325ee287e9a").unwrap(),
             0,
             &Script::default(),
             Some(u32::MAX),
         );
         tx.add_input(&txin_2);
         let mut txin_3 = TxIn::new(
-            &hex::decode("4fe512f97769bc2fe47b0dadb1767404ebe2be50b3ea39a9b93d6325ee287e9a").unwrap(),
+            &hex_simd::decode_to_vec("4fe512f97769bc2fe47b0dadb1767404ebe2be50b3ea39a9b93d6325ee287e9a").unwrap(),
             0,
             &Script::default(),
             Some(u32::MAX),
@@ -325,21 +328,21 @@ mod transaction_tests {
         // Arrange
         let mut tx = Transaction::new(1, 0);
         let txin_1 = TxIn::new(
-            &hex::decode("4fe512f97769bc2fe47b0dadb1767404ebe2be50b3ea39a9b93d6325ee287e9a").unwrap(),
+            &hex_simd::decode_to_vec("4fe512f97769bc2fe47b0dadb1767404ebe2be50b3ea39a9b93d6325ee287e9a").unwrap(),
             0,
             &Script::default(),
             Some(u32::MAX),
         );
         tx.add_input(&txin_1);
         let txin_2 = TxIn::new(
-            &hex::decode("4fe512f97769bc2fe47b0dadb1767404ebe2be50b3ea39a9b93d6325ee287e9a").unwrap(),
+            &hex_simd::decode_to_vec("4fe512f97769bc2fe47b0dadb1767404ebe2be50b3ea39a9b93d6325ee287e9a").unwrap(),
             0,
             &Script::default(),
             Some(u32::MAX),
         );
         tx.add_input(&txin_2);
         let txin_3 = TxIn::new(
-            &hex::decode("4fe512f97769bc2fe47b0dadb1767404ebe2be50b3ea39a9b93d6325ee287e9a").unwrap(),
+            &hex_simd::decode_to_vec("4fe512f97769bc2fe47b0dadb1767404ebe2be50b3ea39a9b93d6325ee287e9a").unwrap(),
             0,
             &Script::default(),
             Some(u32::MAX),
@@ -387,21 +390,21 @@ mod transaction_tests {
         let mut tx = Transaction::new(1, 0);
 
         let txin_1 = TxIn::new(
-            &hex::decode("4fe512f97769bc2fe47b0dadb1767404ebe2be50b3ea39a9b93d6325ee287e9a").unwrap(),
+            &hex_simd::decode_to_vec("4fe512f97769bc2fe47b0dadb1767404ebe2be50b3ea39a9b93d6325ee287e9a").unwrap(),
             0,
             &Script::default(),
             Some(u32::MAX),
         );
         tx.add_input(&txin_1);
         let txin_2 = TxIn::new(
-            &hex::decode("4fe512f97769bc2fe47b0dadb1767404ebe2be50b3ea39a9b93d6325ee287e9a").unwrap(),
+            &hex_simd::decode_to_vec("4fe512f97769bc2fe47b0dadb1767404ebe2be50b3ea39a9b93d6325ee287e9a").unwrap(),
             1,
             &Script::default(),
             Some(u32::MAX),
         );
         tx.add_input(&txin_2);
         let txin_3 = TxIn::new(
-            &hex::decode("4fe512f97769bc2fe47b0dadb1767404ebe2be50b3ea39a9b93d6325ee287e9a").unwrap(),
+            &hex_simd::decode_to_vec("4fe512f97769bc2fe47b0dadb1767404ebe2be50b3ea39a9b93d6325ee287e9a").unwrap(),
             2,
             &Script::default(),
             Some(u32::MAX),
@@ -421,21 +424,21 @@ mod transaction_tests {
     //     let mut tx = Transaction::new(1, 0);
 
     //     let txin_1 = TxIn::new(
-    //         &hex::decode("4fe512f97769bc2fe47b0dadb1767404ebe2be50b3ea39a9b93d6325ee287e9a").unwrap(),
+    //         &hex_simd::decode_to_vec("4fe512f97769bc2fe47b0dadb1767404ebe2be50b3ea39a9b93d6325ee287e9a").unwrap(),
     //         0,
     //         &Script::default(),
     //         Some(u32::MAX),
     //     );
     //     tx.add_input(&txin_1);
     //     let txin_2 = TxIn::new(
-    //         &hex::decode("4fe512f97769bc2fe47b0dadb1767404ebe2be50b3ea39a9b93d6325ee287e9a").unwrap(),
+    //         &hex_simd::decode_to_vec("4fe512f97769bc2fe47b0dadb1767404ebe2be50b3ea39a9b93d6325ee287e9a").unwrap(),
     //         1,
     //         &Script::default(),
     //         Some(u32::MAX),
     //     );
     //     tx.add_input(&txin_2);
     //     let txin_3 = TxIn::new(
-    //         &hex::decode("4fe512f97769bc2fe47b0dadb1767404ebe2be50b3ea39a9b93d6325ee287e9a").unwrap(),
+    //         &hex_simd::decode_to_vec("4fe512f97769bc2fe47b0dadb1767404ebe2be50b3ea39a9b93d6325ee287e9a").unwrap(),
     //         2,
     //         &Script::default(),
     //         Some(u32::MAX),
@@ -456,7 +459,7 @@ mod transaction_tests {
     // #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test)]
     // fn txin_error_when_given_invalid_txid() {
     //     let txin_1 = TxIn::new(
-    //         &hex::decode("30333933366363303566333461616365383537616666663461643330656465353364646539366465313436303334363033303136356364313436613834356133").unwrap(),
+    //         &hex_simd::decode_to_vec("30333933366363303566333461616365383537616666663461643330656465353364646539366465313436303334363033303136356364313436613834356133").unwrap(),
     //         1,
     //         &Script::from_hex("76a9147a1e5b4edd76b81c816ecba65f61c78afb79bdb888ac").unwrap(),
     //         Some(0xffffffff),
@@ -472,7 +475,7 @@ mod transaction_tests {
         // 0100000001793cce727d25984ec3b2c656b2730dcf8e59722052391b1b6e7af108b0a15790070000006a47304402204628fa202f16798ef858baba566f34d96434c61241460ee453cab8193ce87a0102206fd052780b9a8efe4d5fa6d7a2f969220e14aeb7a10b1392b5fda11417f32699412102e6bb51b303ca9cb8e805fa3d104cb030e0ad6872678f5ddb2e3a14188c571f33ffffffff0223020000000000001976a914a0b2113032da4c2c0e22960f12045cecca837c7088ac2f020000000000001976a9146fb1a8e42086219215c45a5e9cb1d94d8fbd845388ac00000000
 
         let mut tx = Transaction::default();
-        let txin = TxIn::from_outpoint_bytes(&hex::decode(outpoint).unwrap()).unwrap();
+        let txin = TxIn::from_outpoint_bytes(&hex_simd::decode_to_vec(outpoint).unwrap()).unwrap();
         tx.add_input(&txin);
 
         assert_eq!(&txin.get_outpoint_hex(Some(true)), outpoint)

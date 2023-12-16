@@ -4,7 +4,7 @@ pub fn to_hex<S>(vec: &[u8], serializer: S) -> Result<S::Ok, S::Error>
 where
     S: Serializer,
 {
-    let hex = hex::encode(vec);
+    let hex = hex_simd::encode_to_string(vec, hex_simd::AsciiCase::Lower);
 
     serializer.serialize_str(&hex)
 }
@@ -15,7 +15,7 @@ where
 {
     let buf = String::deserialize(deserialiser)?;
 
-    hex::decode(buf).map_err(serde::de::Error::custom)
+    hex_simd::decode_to_vec(buf).map_err(serde::de::Error::custom)
 }
 
 pub fn to_reverse_hex<S>(vec: &[u8], serializer: S) -> Result<S::Ok, S::Error>
@@ -25,7 +25,7 @@ where
     let mut hex_vec = vec.to_vec();
     hex_vec.reverse();
 
-    let hex = hex::encode(hex_vec);
+    let hex = hex_simd::encode_to_string(hex_vec, hex_simd::AsciiCase::Lower);
 
     serializer.serialize_str(&hex)
 }
@@ -35,7 +35,7 @@ where
     D: Deserializer<'de>,
 {
     let hex_string = String::deserialize(deserialiser)?;
-    let mut hex_buf = hex::decode(hex_string).map_err(serde::de::Error::custom)?;
+    let mut hex_buf = hex_simd::decode_to_vec(hex_string).map_err(serde::de::Error::custom)?;
     hex_buf.reverse();
 
     Ok(hex_buf)

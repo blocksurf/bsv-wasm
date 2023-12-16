@@ -8,8 +8,8 @@ mod aes_tests {
 
     #[test]
     fn encrypt_aes_128_cbc() {
-        let key = &Hash::sha_256(hex::encode("Key Please").as_bytes()).to_bytes()[0..16];
-        let iv = &Hash::sha_256(hex::encode("IV Please").as_bytes()).to_bytes()[0..16];
+        let key = &Hash::sha_256(hex_simd::encode_to_string("Key Please", hex_simd::AsciiCase::Lower).as_bytes()).to_bytes()[0..16];
+        let iv = &Hash::sha_256(hex_simd::encode_to_string("IV Please", hex_simd::AsciiCase::Lower).as_bytes()).to_bytes()[0..16];
 
         let message = b"Hello world!";
 
@@ -23,8 +23,8 @@ mod aes_tests {
 
     #[test]
     fn encrypt_aes_256_cbc() {
-        let key = &Hash::sha_256(hex::encode("Key Please").as_bytes()).to_bytes()[0..32];
-        let iv = &Hash::sha_256(hex::encode("IV Please").as_bytes()).to_bytes()[0..16];
+        let key = &Hash::sha_256(hex_simd::encode_to_string("Key Please", hex_simd::AsciiCase::Lower).as_bytes()).to_bytes()[0..32];
+        let iv = &Hash::sha_256(hex_simd::encode_to_string("IV Please", hex_simd::AsciiCase::Lower).as_bytes()).to_bytes()[0..16];
 
         let message = b"Hello world!";
 
@@ -38,8 +38,8 @@ mod aes_tests {
 
     #[test]
     fn encrypt_aes_128_ctr() {
-        let key = &Hash::sha_256(hex::encode("Key Please").as_bytes()).to_bytes()[0..16];
-        let iv = &Hash::sha_256(hex::encode("IV Please").as_bytes()).to_bytes()[0..16];
+        let key = &Hash::sha_256(hex_simd::encode_to_string("Key Please", hex_simd::AsciiCase::Lower).as_bytes()).to_bytes()[0..16];
+        let iv = &Hash::sha_256(hex_simd::encode_to_string("IV Please", hex_simd::AsciiCase::Lower).as_bytes()).to_bytes()[0..16];
 
         let message = b"Hello world!";
 
@@ -53,8 +53,8 @@ mod aes_tests {
 
     #[test]
     fn encrypt_aes_256_ctr() {
-        let key = &Hash::sha_256(hex::encode("Key Please").as_bytes()).to_bytes()[0..32];
-        let iv = &Hash::sha_256(hex::encode("IV Please").as_bytes()).to_bytes()[0..16];
+        let key = &Hash::sha_256(hex_simd::encode_to_string("Key Please", hex_simd::AsciiCase::Lower).as_bytes()).to_bytes()[0..32];
+        let iv = &Hash::sha_256(hex_simd::encode_to_string("IV Please", hex_simd::AsciiCase::Lower).as_bytes()).to_bytes()[0..16];
 
         let message = b"Hello world!";
 

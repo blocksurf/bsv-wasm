@@ -46,7 +46,7 @@ impl Transaction {
     }
 
     pub(crate) fn from_hex_impl(hex_str: &str) -> Result<Transaction, BSVErrors> {
-        let tx_bytes = hex::decode(hex_str)?;
+        let tx_bytes = hex_simd::decode_to_vec(hex_str)?;
 
         Transaction::from_bytes_impl(&tx_bytes)
     }
@@ -171,11 +171,11 @@ impl Transaction {
     }
 
     pub(crate) fn to_hex_impl(&self) -> Result<String, BSVErrors> {
-        Ok(hex::encode(self.to_bytes_impl()?))
+        Ok(hex_simd::encode_to_string(self.to_bytes_impl()?, hex_simd::AsciiCase::Lower))
     }
 
     pub(crate) fn to_compact_hex_impl(&self) -> Result<String, BSVErrors> {
-        Ok(hex::encode(self.to_compact_bytes_impl()?))
+        Ok(hex_simd::encode_to_string(self.to_compact_bytes_impl()?, hex_simd::AsciiCase::Lower))
     }
 
     pub(crate) fn to_json_string_impl(&self) -> Result<String, BSVErrors> {
@@ -461,7 +461,7 @@ impl Transaction {
     }
 
     pub fn from_compact_hex(compact_hex: &str) -> Result<Self, BSVErrors> {
-        Transaction::from_compact_bytes_impl(&hex::decode(compact_hex)?)
+        Transaction::from_compact_bytes_impl(&hex_simd::decode_to_vec(compact_hex)?)
     }
 
     pub fn is_coinbase(&self) -> bool {
