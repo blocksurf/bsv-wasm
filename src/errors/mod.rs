@@ -70,6 +70,13 @@ pub enum BSVErrors {
     ),
 
     #[error("{0}")]
+    SimdJson(
+        #[source]
+        #[from]
+        simd_json::Error,
+    ),
+
+    #[error("{0}")]
     InvalidKeyIvLength(
         #[source]
         #[from]

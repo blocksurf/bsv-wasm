@@ -1,6 +1,6 @@
-use bsv::CipherKeys as BSVCipherKeys;
-use bsv::ECIESCiphertext as BSVECIESCiphertext;
-use bsv::ECIES as BSVECIES;
+use bsvsimd::CipherKeys as BSVCipherKeys;
+use bsvsimd::ECIESCiphertext as BSVECIESCiphertext;
+use bsvsimd::ECIES as BSVECIES;
 use wasm_bindgen::prelude::*;
 
 use crate::keypair::private_key::PrivateKey;

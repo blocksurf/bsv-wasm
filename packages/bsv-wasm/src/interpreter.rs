@@ -1,5 +1,5 @@
 use crate::{script::Script, transaction::Transaction};
-use bsv::{Interpreter as BSVInterpreter, State as BSVState};
+use bsvsimd::{Interpreter as BSVInterpreter, State as BSVState};
 use wasm_bindgen::{prelude::*, JsError};
 
 #[wasm_bindgen]
@@ -62,11 +62,11 @@ pub enum JsStatus {
     Finished,
 }
 
-impl From<bsv::Status> for JsStatus {
-    fn from(s: bsv::Status) -> Self {
+impl From<bsvsimd::Status> for JsStatus {
+    fn from(s: bsvsimd::Status) -> Self {
         match s {
-            bsv::Status::Running => JsStatus::Running,
-            bsv::Status::Finished => JsStatus::Finished,
+            bsvsimd::Status::Running => JsStatus::Running,
+            bsvsimd::Status::Finished => JsStatus::Finished,
         }
     }
 }

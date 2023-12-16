@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod tests {
-    use bsv::{PrivateKey, PublicKey};
+    use bsvsimd::{PrivateKey, PublicKey};
 
     #[test]
     fn pub_key_from_private_key() {

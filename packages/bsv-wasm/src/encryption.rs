@@ -1,5 +1,5 @@
-use bsv::AESAlgorithms as BSVAESAlgorithms;
-use bsv::AES as BSVAES;
+use bsvsimd::AESAlgorithms as BSVAESAlgorithms;
+use bsvsimd::AES as BSVAES;
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]

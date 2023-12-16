@@ -1,4 +1,4 @@
-use bsv::TxIn as BSVTxIn;
+use bsvsimd::TxIn as BSVTxIn;
 use wasm_bindgen::prelude::*;
 
 use crate::script::Script;

@@ -1,4 +1,4 @@
-use bsv::PrivateKey as BSVPrivateKey;
+use bsvsimd::PrivateKey as BSVPrivateKey;
 use wasm_bindgen::prelude::*;
 
 use crate::{ecies::ECIESCiphertext, keypair::public_key::PublicKey, signature::Signature};

@@ -1,4 +1,4 @@
-use bsv::ExtendedPublicKey as BSVExtendedPublicKey;
+use bsvsimd::ExtendedPublicKey as BSVExtendedPublicKey;
 use wasm_bindgen::prelude::*;
 
 use crate::keypair::{extended_private_key::ExtendedPrivateKey, public_key::PublicKey};

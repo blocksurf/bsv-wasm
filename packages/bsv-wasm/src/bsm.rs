@@ -1,4 +1,4 @@
-use bsv::BSM as BSVBSM;
+use bsvsimd::BSM as BSVBSM;
 use wasm_bindgen::prelude::*;
 
 use crate::{address::P2PKHAddress, keypair::private_key::PrivateKey, signature::Signature};

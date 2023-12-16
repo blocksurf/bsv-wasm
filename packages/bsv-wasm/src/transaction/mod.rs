@@ -1,4 +1,4 @@
-use bsv::Transaction as BSVTransaction;
+use bsvsimd::Transaction as BSVTransaction;
 use wasm_bindgen::prelude::*;
 
 mod txin;

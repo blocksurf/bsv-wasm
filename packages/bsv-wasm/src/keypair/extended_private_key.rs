@@ -1,4 +1,4 @@
-use bsv::ExtendedPrivateKey as BSVExtendedPrivateKey;
+use bsvsimd::ExtendedPrivateKey as BSVExtendedPrivateKey;
 use wasm_bindgen::prelude::*;
 
 use super::{private_key::PrivateKey, public_key::PublicKey};

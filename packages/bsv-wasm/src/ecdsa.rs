@@ -1,4 +1,4 @@
-use bsv::ECDSA as BSVECDSA;
+use bsvsimd::ECDSA as BSVECDSA;
 use wasm_bindgen::prelude::*;
 
 use crate::{
@@ -13,11 +13,11 @@ pub enum SigningHash {
     Sha256d,
 }
 
-impl From<SigningHash> for bsv::SigningHash {
+impl From<SigningHash> for bsvsimd::SigningHash {
     fn from(item: SigningHash) -> Self {
         match item {
-            SigningHash::Sha256 => bsv::SigningHash::Sha256,
-            SigningHash::Sha256d => bsv::SigningHash::Sha256d,
+            SigningHash::Sha256 => bsvsimd::SigningHash::Sha256,
+            SigningHash::Sha256d => bsvsimd::SigningHash::Sha256d,
         }
     }
 }

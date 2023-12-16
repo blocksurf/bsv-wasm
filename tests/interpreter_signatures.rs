@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod interpreter_signature_tests {
-    use bsv::Interpreter;
-    use bsv::{Hash, PrivateKey, Script, SigHash, Transaction, TxIn};
+    use bsvsimd::Interpreter;
+    use bsvsimd::{Hash, PrivateKey, Script, SigHash, Transaction, TxIn};
 
     #[test]
     fn simple_p2pkh_signature_test() {

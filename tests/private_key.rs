@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod private_key_tests {
-    use bsv::keypair::*;
+    use bsvsimd::keypair::*;
 
     #[test]
     fn import_private_key_and_verify() {

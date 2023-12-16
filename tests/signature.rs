@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod tests {
-    use bsv::*;
+    use bsvsimd::*;
     use rayon::iter::{IntoParallelIterator, ParallelIterator};
 
     #[test]

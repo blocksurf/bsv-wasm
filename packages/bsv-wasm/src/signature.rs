@@ -1,5 +1,5 @@
 use crate::{ecdsa::SigningHash, keypair::public_key::PublicKey};
-use bsv::{RecoveryInfo as BSVRecoveryInfo, Signature as BSVSignature};
+use bsvsimd::{RecoveryInfo as BSVRecoveryInfo, Signature as BSVSignature};
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]

@@ -1,5 +1,5 @@
 use crate::{chainparams::ChainParams, keypair::public_key::PublicKey, script::Script, sighash::SighashSignature, signature::Signature};
-use bsv::P2PKHAddress as BSVP2PKHAddress;
+use bsvsimd::P2PKHAddress as BSVP2PKHAddress;
 use wasm_bindgen::prelude::*;
 
 #[derive(Clone)]

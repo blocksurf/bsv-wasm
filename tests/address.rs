@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod tests {
-    use bsv::{address::*, chainparams::ChainParams, PrivateKey, PublicKey};
+    use bsvsimd::{address::*, chainparams::ChainParams, PrivateKey, PublicKey};
     use serde::{Deserialize, Serialize};
 
     #[test]

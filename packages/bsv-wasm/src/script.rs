@@ -1,4 +1,4 @@
-use bsv::Script as BSVScript;
+use bsvsimd::Script as BSVScript;
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]

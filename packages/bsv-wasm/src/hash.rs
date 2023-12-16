@@ -1,4 +1,4 @@
-use bsv::Hash as BSVHash;
+use bsvsimd::Hash as BSVHash;
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]

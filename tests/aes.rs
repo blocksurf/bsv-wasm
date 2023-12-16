@@ -3,7 +3,7 @@
 mod aes_tests {
     use std::io::Read;
 
-    use bsv::{encryption::AESAlgorithms, hash::Hash, AES};
+    use bsvsimd::{encryption::AESAlgorithms, hash::Hash, AES};
     use rand_core::{OsRng, RngCore};
 
     #[test]

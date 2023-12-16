@@ -1,5 +1,5 @@
 use crate::signature::Signature;
-use bsv::SighashSignature as BSVSighashSignature;
+use bsvsimd::SighashSignature as BSVSighashSignature;
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
@@ -65,51 +65,51 @@ pub enum SigHash {
     Legacy_InputOutput = 0x83,
 }
 
-impl From<SigHash> for bsv::SigHash {
-    fn from(v: SigHash) -> bsv::SigHash {
+impl From<SigHash> for bsvsimd::SigHash {
+    fn from(v: SigHash) -> bsvsimd::SigHash {
         match v {
-            SigHash::FORKID => bsv::SigHash::FORKID,
-            SigHash::ALL => bsv::SigHash::ALL,
-            SigHash::NONE => bsv::SigHash::NONE,
-            SigHash::SINGLE => bsv::SigHash::SINGLE,
-            SigHash::ANYONECANPAY => bsv::SigHash::ANYONECANPAY,
-            SigHash::InputsOutputs => bsv::SigHash::InputsOutputs,
-            SigHash::Inputs => bsv::SigHash::Inputs,
-            SigHash::InputsOutput => bsv::SigHash::InputsOutput,
-            SigHash::InputOutputs => bsv::SigHash::InputOutputs,
-            SigHash::Input => bsv::SigHash::Input,
-            SigHash::InputOutput => bsv::SigHash::InputOutput,
-            SigHash::Legacy_InputOutputs => bsv::SigHash::Legacy_InputOutputs,
-            SigHash::Legacy_Input => bsv::SigHash::Legacy_Input,
-            SigHash::Legacy_InputOutput => bsv::SigHash::Legacy_InputOutput,
+            SigHash::FORKID => bsvsimd::SigHash::FORKID,
+            SigHash::ALL => bsvsimd::SigHash::ALL,
+            SigHash::NONE => bsvsimd::SigHash::NONE,
+            SigHash::SINGLE => bsvsimd::SigHash::SINGLE,
+            SigHash::ANYONECANPAY => bsvsimd::SigHash::ANYONECANPAY,
+            SigHash::InputsOutputs => bsvsimd::SigHash::InputsOutputs,
+            SigHash::Inputs => bsvsimd::SigHash::Inputs,
+            SigHash::InputsOutput => bsvsimd::SigHash::InputsOutput,
+            SigHash::InputOutputs => bsvsimd::SigHash::InputOutputs,
+            SigHash::Input => bsvsimd::SigHash::Input,
+            SigHash::InputOutput => bsvsimd::SigHash::InputOutput,
+            SigHash::Legacy_InputOutputs => bsvsimd::SigHash::Legacy_InputOutputs,
+            SigHash::Legacy_Input => bsvsimd::SigHash::Legacy_Input,
+            SigHash::Legacy_InputOutput => bsvsimd::SigHash::Legacy_InputOutput,
         }
     }
 }
 
-impl From<bsv::SigHash> for SigHash {
-    fn from(v: bsv::SigHash) -> SigHash {
+impl From<bsvsimd::SigHash> for SigHash {
+    fn from(v: bsvsimd::SigHash) -> SigHash {
         match v {
-            bsv::SigHash::FORKID => SigHash::FORKID,
-            bsv::SigHash::ALL => SigHash::ALL,
-            bsv::SigHash::NONE => SigHash::NONE,
-            bsv::SigHash::SINGLE => SigHash::SINGLE,
-            bsv::SigHash::ANYONECANPAY => SigHash::ANYONECANPAY,
-            bsv::SigHash::InputsOutputs => SigHash::InputsOutputs,
-            bsv::SigHash::Inputs => SigHash::Inputs,
-            bsv::SigHash::InputsOutput => SigHash::InputsOutput,
-            bsv::SigHash::InputOutputs => SigHash::InputOutputs,
-            bsv::SigHash::Input => SigHash::Input,
-            bsv::SigHash::InputOutput => SigHash::InputOutput,
-            bsv::SigHash::Legacy_InputOutputs => SigHash::Legacy_InputOutputs,
-            bsv::SigHash::Legacy_Input => SigHash::Legacy_Input,
-            bsv::SigHash::Legacy_InputOutput => SigHash::Legacy_InputOutput,
+            bsvsimd::SigHash::FORKID => SigHash::FORKID,
+            bsvsimd::SigHash::ALL => SigHash::ALL,
+            bsvsimd::SigHash::NONE => SigHash::NONE,
+            bsvsimd::SigHash::SINGLE => SigHash::SINGLE,
+            bsvsimd::SigHash::ANYONECANPAY => SigHash::ANYONECANPAY,
+            bsvsimd::SigHash::InputsOutputs => SigHash::InputsOutputs,
+            bsvsimd::SigHash::Inputs => SigHash::Inputs,
+            bsvsimd::SigHash::InputsOutput => SigHash::InputsOutput,
+            bsvsimd::SigHash::InputOutputs => SigHash::InputOutputs,
+            bsvsimd::SigHash::Input => SigHash::Input,
+            bsvsimd::SigHash::InputOutput => SigHash::InputOutput,
+            bsvsimd::SigHash::Legacy_InputOutputs => SigHash::Legacy_InputOutputs,
+            bsvsimd::SigHash::Legacy_Input => SigHash::Legacy_Input,
+            bsvsimd::SigHash::Legacy_InputOutput => SigHash::Legacy_InputOutput,
         }
     }
 }
 
-//impl Into<bsv::SigHash> for SigHash {
-//fn into(self) -> bsv::SigHash {
-//bsv::SigHash::try_from(self as u8).unwrap()
+//impl Into<bsvsimd::SigHash> for SigHash {
+//fn into(self) -> bsvsimd::SigHash {
+//bsvsimd::SigHash::try_from(self as u8).unwrap()
 //}
 //}
 

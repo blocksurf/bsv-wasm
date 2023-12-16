@@ -183,8 +183,8 @@ impl Transaction {
         Ok(json)
     }
 
-    pub(crate) fn from_json_string_impl(json_string: &str) -> Result<Transaction, BSVErrors> {
-        Ok(serde_json::from_str(json_string)?)
+    pub(crate) fn from_json_string_impl(json_string: &mut str) -> Result<Transaction, BSVErrors> {
+        Ok(simd_json::from_slice(unsafe { json_string.as_bytes_mut() })?)
     }
 
     /**
@@ -409,7 +409,7 @@ impl Transaction {
         Transaction::to_json_string_impl(self)
     }
 
-    pub fn from_json_string(json_string: &str) -> Result<Transaction, BSVErrors> {
+    pub fn from_json_string(json_string: &mut str) -> Result<Transaction, BSVErrors> {
         Transaction::from_json_string_impl(json_string)
     }
 

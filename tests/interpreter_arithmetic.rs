@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod interpreter_arithmetic_tests {
-    use bsv::Interpreter;
-    use bsv::Script;
+    use bsvsimd::Interpreter;
+    use bsvsimd::Script;
 
     #[test]
     fn one_plus_one_equals_two() {

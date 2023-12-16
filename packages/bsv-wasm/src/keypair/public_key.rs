@@ -1,4 +1,4 @@
-use bsv::PublicKey as BSVPublicKey;
+use bsvsimd::PublicKey as BSVPublicKey;
 use wasm_bindgen::prelude::*;
 
 use crate::{address::P2PKHAddress, ecies::ECIESCiphertext, keypair::private_key::PrivateKey, signature::Signature};

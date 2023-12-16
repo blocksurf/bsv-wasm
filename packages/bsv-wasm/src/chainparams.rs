@@ -1,4 +1,4 @@
-use bsv::chainparams::ChainParams as BSVChainParams;
+use bsvsimd::chainparams::ChainParams as BSVChainParams;
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
