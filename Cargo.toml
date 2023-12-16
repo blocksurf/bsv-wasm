@@ -1,5 +1,5 @@
 [package]
-name = "bsv"
+name = "bsvsimd"
 version = "2.1.0"
 authors = ["Firaenix <Nick.Carton@gmail.com>"]
 edition = "2021"
