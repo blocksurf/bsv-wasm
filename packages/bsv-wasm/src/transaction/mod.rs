@@ -143,7 +143,7 @@ impl Transaction {
     }
 
     pub fn from_json_string(json_string: &str) -> Result<Transaction, wasm_bindgen::JsError> {
-        Ok(Transaction(BSVTransaction::from_json_string(json_string)?))
+        Ok(Transaction(BSVTransaction::from_json_string(json_string.to_owned().as_mut())?))
     }
 
     pub fn to_json(&self) -> Result<JsValue, wasm_bindgen::JsError> {

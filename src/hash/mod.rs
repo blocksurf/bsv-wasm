@@ -39,6 +39,10 @@ impl Hash {
     pub fn to_hex(&self) -> String {
         self.0.to_hex()
     }
+
+    pub fn as_bytes(&self) -> &[u8] {
+        &self.0
+    }
 }
 
 /**
