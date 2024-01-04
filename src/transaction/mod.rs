@@ -3,6 +3,7 @@ use std::io::Write;
 
 use crate::BSVErrors;
 use crate::Hash;
+use crate::Script;
 use crate::VarIntReader;
 use crate::VarIntWriter;
 use byteorder::*;
@@ -66,7 +67,7 @@ impl Transaction {
             Err(e) => return Err(BSVErrors::DeserialiseTransaction("n_inputs".to_string(), e)),
         };
 
-        let mut inputs: Vec<TxIn> = Vec::new();
+        let mut inputs: Vec<TxIn> = Vec::with_capacity(n_inputs as usize);
         // List of Inputs
         for _ in 0..n_inputs {
             let tx_in = TxIn::read_in(&mut cursor)?;
@@ -80,7 +81,7 @@ impl Transaction {
         };
 
         // List of  Outputs
-        let mut outputs: Vec<TxOut> = Vec::new();
+        let mut outputs: Vec<TxOut> = Vec::with_capacity(n_outputs as usize);
         for _ in 0..n_outputs {
             let tx_out = TxOut::read_in(&mut cursor)?;
             outputs.push(tx_out);
@@ -335,9 +336,17 @@ impl Transaction {
         self.inputs[index] = input.clone();
     }
 
+    pub fn _set_input(&mut self, index: usize, input: TxIn) {
+        self.inputs[index] = input;
+    }
+
     // #[cfg_attr(all(feature = "wasm-bindgen-transaction"), wasm_bindgen(js_name = setOutput))]
     pub fn set_output(&mut self, index: usize, output: &TxOut) {
         self.outputs[index] = output.clone();
+    }
+
+    pub fn _set_output(&mut self, index: usize, output: TxOut) {
+        self.outputs[index] = output;
     }
 
     pub fn is_coinbase_impl(&self) -> bool {
@@ -466,5 +475,55 @@ impl Transaction {
 
     pub fn is_coinbase(&self) -> bool {
         self.is_coinbase_impl()
+    }
+}
+
+impl Transaction {
+    pub fn get_inputs_slice(&self) -> &[TxIn] {
+        &self.inputs
+    }
+
+    pub fn get_outputs_slice(&self) -> &[TxOut] {
+        &self.outputs
+    }
+
+    pub fn get_output_script(&self, index: usize) -> Option<Script> {
+        self.outputs.get(index).map(|o| o.get_script_pub_key())
+    }
+
+    pub fn set_input_locking_script(&mut self, index: usize, locking_script: &Script) {
+        self.inputs[index].set_locking_script(locking_script);
+        self.hash_cache.hash_inputs = None;
+        self.hash_cache.hash_sequence = None;
+    }
+
+    pub fn set_input_unlocking_script(&mut self, index: usize, unlocking_script: &Script) {
+        self.inputs[index].set_unlocking_script(unlocking_script);
+        self.hash_cache.hash_inputs = None;
+        self.hash_cache.hash_sequence = None;
+    }
+
+    pub fn set_input_prev_txid(&mut self, index: usize, prev_txid: &[u8]) {
+        self.inputs[index].set_prev_tx_id(prev_txid);
+        self.hash_cache.hash_inputs = None;
+        self.hash_cache.hash_sequence = None;
+    }
+
+    pub fn set_input_satoshis(&mut self, index: usize, satoshis: u64) {
+        self.inputs[index].set_satoshis(satoshis);
+        self.hash_cache.hash_inputs = None;
+        self.hash_cache.hash_sequence = None;
+    }
+
+    pub fn set_input_sequence(&mut self, index: usize, sequence: u32) {
+        self.inputs[index].set_sequence(sequence);
+        self.hash_cache.hash_inputs = None;
+        self.hash_cache.hash_sequence = None;
+    }
+
+    pub fn set_input_vout(&mut self, index: usize, vout: u32) {
+        self.inputs[index].set_vout(vout);
+        self.hash_cache.hash_inputs = None;
+        self.hash_cache.hash_sequence = None;
     }
 }

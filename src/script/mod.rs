@@ -263,6 +263,10 @@ impl Script {
         Ok(nested_bits)
     }
 
+    pub fn is_op_return(&self) -> bool {
+        self.0[0].eq(&ScriptBit::OpCode(OpCodes::OP_0)) && self.0[1].eq(&ScriptBit::OpCode(OpCodes::OP_RETURN))
+    }
+
     pub fn from_asm_string(asm: &str) -> Result<Script, BSVErrors> {
         let bits: Result<Vec<ScriptBit>, _> = asm.split(' ').filter(|x| !(x.is_empty() || x == &"\n" || x == &"\r")).map(Script::map_string_to_script_bit).collect();
         let bits = Script::if_statement_pass(&mut bits?.iter())?;
@@ -315,6 +319,10 @@ impl Script {
         Script::script_bits_to_bytes(&self.0)
     }
 
+    pub fn iter(&self) -> std::slice::Iter<'_, ScriptBit> {
+        self.0.iter()
+    }
+
     pub fn get_script_length(&self) -> usize {
         self.to_bytes().len()
     }
@@ -325,6 +333,13 @@ impl Script {
 
     pub fn remove_codeseparators(&mut self) {
         self.0 = self.0.clone().into_iter().filter(|x| *x != ScriptBit::OpCode(OpCodes::OP_CODESEPARATOR)).collect();
+    }
+
+    pub fn prepend_opcodes<T>(&mut self, op_codes: T)
+    where
+        T: IntoIterator<Item = ScriptBit>,
+    {
+        self.0.splice(0..0, op_codes);
     }
 
     pub fn from_chunks(chunks: Vec<Vec<u8>>) -> Result<Script, BSVErrors> {
@@ -341,6 +356,14 @@ impl Script {
 
     pub fn push_array(&mut self, code: &[ScriptBit]) {
         self.0.extend_from_slice(code);
+    }
+
+    pub fn extend_from(&mut self, script: &Script) {
+        self.0.extend_from_slice(&script.0)
+    }
+
+    pub fn insert_at(&mut self, index: usize, code: ScriptBit) {
+        self.0[index] = code
     }
 
     pub fn to_scripthash_hex(&self) -> String {
@@ -370,5 +393,19 @@ impl Script {
 
     pub fn to_script_bits(&self) -> Vec<ScriptBit> {
         self.0.clone()
+    }
+
+    pub fn get_script_bit(&self, index: usize) -> Option<ScriptBit> {
+        self.0.get(index).cloned()
+    }
+}
+
+impl IntoIterator for Script {
+    type Item = ScriptBit;
+
+    type IntoIter = std::vec::IntoIter<Self::Item>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.0.into_iter()
     }
 }

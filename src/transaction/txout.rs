@@ -156,4 +156,12 @@ impl TxOut {
     pub fn to_json_string(&self) -> Result<String, BSVErrors> {
         TxOut::to_json_string_impl(self)
     }
+
+    pub fn set_script(&mut self, script: Script) {
+        self.script_pub_key = script
+    }
+
+    pub fn set_value(&mut self, satoshis: u64) {
+        self.value = satoshis
+    }
 }

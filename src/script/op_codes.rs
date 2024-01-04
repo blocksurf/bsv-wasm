@@ -12,8 +12,10 @@ use strum_macros::EnumString;
 
 #[derive(Debug, Clone, Copy, FromPrimitive, ToPrimitive, EnumString, PartialEq, Eq, Serialize, Deserialize)]
 #[allow(non_camel_case_types)]
+#[repr(u8)]
 pub enum OpCodes {
     /// Pushes 0 onto the stack
+    #[strum(serialize = "OP_FALSE", serialize = "OP_0")]
     OP_0 = 0,
     /// Pushes 0 onto the stack
     // OP_FALSE = 0,
@@ -28,6 +30,7 @@ pub enum OpCodes {
     /// Pushes -1 onto the stack
     OP_1NEGATE = 79,
     /// Pushes 1 onto the stack
+    #[strum(serialize = "OP_TRUE", serialize = "OP_1")]
     OP_1 = 81,
     /// Pushes 1 onto the stack
     // OP_TRUE = 81,
@@ -304,3 +307,140 @@ impl fmt::Display for OpCodes {
         // fmt::Debug::fmt(self, f)
     }
 }
+
+macro_rules! impl_opcode {
+    ($($type:ty),+) => {
+        $(
+
+            impl PartialEq<$type> for OpCodes {
+                fn eq(&self, other: &$type) -> bool {
+                    *self as $type == *other
+                }
+            }
+
+            impl From<OpCodes> for $type {
+                fn from(val: OpCodes) -> Self {
+                    val as $type
+                }
+            }
+
+            impl From<$type> for OpCodes {
+                fn from(value: $type) -> Self {
+                    match value {
+                        0 => OpCodes::OP_0,
+                        76 => OpCodes::OP_PUSHDATA1,
+                        77 => OpCodes::OP_PUSHDATA2,
+                        78 => OpCodes::OP_PUSHDATA4,
+                        79 => OpCodes::OP_1NEGATE,
+                        81 => OpCodes::OP_1,
+                        82 => OpCodes::OP_2,
+                        83 => OpCodes::OP_3,
+                        84 => OpCodes::OP_4,
+                        85 => OpCodes::OP_5,
+                        86 => OpCodes::OP_6,
+                        87 => OpCodes::OP_7,
+                        88 => OpCodes::OP_8,
+                        89 => OpCodes::OP_9,
+                        90 => OpCodes::OP_10,
+                        91 => OpCodes::OP_11,
+                        92 => OpCodes::OP_12,
+                        93 => OpCodes::OP_13,
+                        94 => OpCodes::OP_14,
+                        95 => OpCodes::OP_15,
+                        96 => OpCodes::OP_16,
+                        97 => OpCodes::OP_NOP,
+                        99 => OpCodes::OP_IF,
+                        100 => OpCodes::OP_NOTIF,
+                        103 => OpCodes::OP_ELSE,
+                        104 => OpCodes::OP_ENDIF,
+                        105 => OpCodes::OP_VERIFY,
+                        106 => OpCodes::OP_RETURN,
+                        107 => OpCodes::OP_TOALTSTACK,
+                        108 => OpCodes::OP_FROMALTSTACK,
+                        109 => OpCodes::OP_2DROP,
+                        110 => OpCodes::OP_2DUP,
+                        111 => OpCodes::OP_3DUP,
+                        112 => OpCodes::OP_2OVER,
+                        113 => OpCodes::OP_2ROT,
+                        114 => OpCodes::OP_2SWAP,
+                        115 => OpCodes::OP_IFDUP,
+                        116 => OpCodes::OP_DEPTH,
+                        117 => OpCodes::OP_DROP,
+                        118 => OpCodes::OP_DUP,
+                        119 => OpCodes::OP_NIP,
+                        120 => OpCodes::OP_OVER,
+                        121 => OpCodes::OP_PICK,
+                        122 => OpCodes::OP_ROLL,
+                        123 => OpCodes::OP_ROT,
+                        124 => OpCodes::OP_SWAP,
+                        125 => OpCodes::OP_TUCK,
+                        126 => OpCodes::OP_CAT,
+                        127 => OpCodes::OP_SPLIT,
+                        130 => OpCodes::OP_SIZE,
+                        131 => OpCodes::OP_INVERT,
+                        132 => OpCodes::OP_AND,
+                        133 => OpCodes::OP_OR,
+                        134 => OpCodes::OP_XOR,
+                        135 => OpCodes::OP_EQUAL,
+                        136 => OpCodes::OP_EQUALVERIFY,
+                        139 => OpCodes::OP_1ADD,
+                        140 => OpCodes::OP_1SUB,
+                        143 => OpCodes::OP_NEGATE,
+                        144 => OpCodes::OP_ABS,
+                        145 => OpCodes::OP_NOT,
+                        146 => OpCodes::OP_0NOTEQUAL,
+                        147 => OpCodes::OP_ADD,
+                        148 => OpCodes::OP_SUB,
+                        149 => OpCodes::OP_MUL,
+                        150 => OpCodes::OP_DIV,
+                        151 => OpCodes::OP_MOD,
+                        152 => OpCodes::OP_LSHIFT,
+                        153 => OpCodes::OP_RSHIFT,
+                        154 => OpCodes::OP_BOOLAND,
+                        155 => OpCodes::OP_BOOLOR,
+                        156 => OpCodes::OP_NUMEQUAL,
+                        157 => OpCodes::OP_NUMEQUALVERIFY,
+                        158 => OpCodes::OP_NUMNOTEQUAL,
+                        159 => OpCodes::OP_LESSTHAN,
+                        160 => OpCodes::OP_GREATERTHAN,
+                        161 => OpCodes::OP_LESSTHANOREQUAL,
+                        162 => OpCodes::OP_GREATERTHANOREQUAL,
+                        163 => OpCodes::OP_MIN,
+                        164 => OpCodes::OP_MAX,
+                        165 => OpCodes::OP_WITHIN,
+                        128 => OpCodes::OP_NUM2BIN,
+                        129 => OpCodes::OP_BIN2NUM,
+                        166 => OpCodes::OP_RIPEMD160,
+                        167 => OpCodes::OP_SHA1,
+                        168 => OpCodes::OP_SHA256,
+                        169 => OpCodes::OP_HASH160,
+                        170 => OpCodes::OP_HASH256,
+                        171 => OpCodes::OP_CODESEPARATOR,
+                        172 => OpCodes::OP_CHECKSIG,
+                        173 => OpCodes::OP_CHECKSIGVERIFY,
+                        174 => OpCodes::OP_CHECKMULTISIG,
+                        175 => OpCodes::OP_CHECKMULTISIGVERIFY,
+                        177 => OpCodes::OP_CHECKLOCKTIMEVERIFY,
+                        178 => OpCodes::OP_CHECKSEQUENCEVERIFY,
+                        179 => OpCodes::OP_NOP4,
+                        180 => OpCodes::OP_NOP5,
+                        181 => OpCodes::OP_NOP6,
+                        182 => OpCodes::OP_NOP7,
+                        183 => OpCodes::OP_NOP8,
+                        184 => OpCodes::OP_NOP9,
+                        185 => OpCodes::OP_NOP10,
+                        186..=250 => OpCodes::OP_INVALID_ABOVE,
+                        251 => OpCodes::OP_DATA,
+                        252 => OpCodes::OP_SIG,
+                        253 => OpCodes::OP_PUBKEYHASH,
+                        254 => OpCodes::OP_PUBKEY,
+                        255 => OpCodes::OP_INVALIDOPCODE,
+                        _ => OpCodes::OP_INVALIDOPCODE,
+                    }
+                }
+            }
+        )+
+    }
+}
+
+impl_opcode!(u8, u16, u32, u64);
