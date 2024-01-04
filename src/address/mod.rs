@@ -4,7 +4,7 @@ use crate::{PublicKey, Signature};
 
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Copy)]
 pub struct P2PKHAddress(u8, [u8; 20], [u8; 4]);
 
 impl Serialize for P2PKHAddress {
