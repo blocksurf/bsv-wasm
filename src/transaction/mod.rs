@@ -1,3 +1,4 @@
+use std::borrow::Cow;
 use std::io::Cursor;
 use std::io::Write;
 
@@ -261,6 +262,14 @@ impl Transaction {
     // #[cfg_attr(all(feature = "wasm-bindgen-transaction"), wasm_bindgen(js_name = getNLocktimeAsBytes))]
     pub fn get_n_locktime_as_bytes(&self) -> Vec<u8> {
         self.n_locktime.to_be_bytes().to_vec()
+    }
+
+    pub fn get_input_as_ref(&self, index: usize) -> Option<&TxIn> {
+        self.inputs.get(index)
+    }
+
+    pub fn get_output_as_ref(&self, index: usize) -> Option<&TxOut> {
+        self.outputs.get(index)
     }
 
     /**
