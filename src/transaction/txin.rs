@@ -1,4 +1,5 @@
 use crate::BSVErrors;
+use crate::ScriptBit;
 use crate::VarIntReader;
 use crate::VarIntWriter;
 use std::io::Cursor;
@@ -66,6 +67,24 @@ impl TxIn {
                 Script::from_bytes(&unlocking_script_bytes)
             }
             None => Ok(self.unlocking_script.clone()),
+        }
+    }
+
+    pub(crate) fn get_finalised_script_bits_impl(&self) -> Result<Vec<ScriptBit>, BSVErrors> {
+        match self.locking_script.as_ref() {
+            // If there is a specified unlocking script, prepend it to the locking script
+            Some(locking_script) => {
+                let lock = locking_script.as_slice();
+                let unlock = self.unlocking_script.as_slice();
+
+                let mut bits = Vec::with_capacity(unlock.len() + lock.len());
+
+                bits.extend_from_slice(unlock);
+                bits.extend_from_slice(lock);
+
+                Ok(bits)
+            }
+            None => Ok(self.unlocking_script.to_script_bits()),
         }
     }
 
@@ -481,6 +500,10 @@ impl TxIn {
 
     pub fn get_finalised_script(&self) -> Result<Script, BSVErrors> {
         self.get_finalised_script_impl()
+    }
+
+    pub fn get_finalised_script_bits(&self) -> Result<Vec<ScriptBit>, BSVErrors> {
+        self.get_finalised_script_bits_impl()
     }
 
     // Checks if input is a coinbase

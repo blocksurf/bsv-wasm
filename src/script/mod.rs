@@ -319,10 +319,6 @@ impl Script {
         Script::script_bits_to_bytes(&self.0)
     }
 
-    pub fn iter(&self) -> std::slice::Iter<'_, ScriptBit> {
-        self.0.iter()
-    }
-
     pub fn get_script_length(&self) -> usize {
         self.to_bytes().len()
     }
@@ -393,6 +389,18 @@ impl Script {
 
     pub fn to_script_bits(&self) -> Vec<ScriptBit> {
         self.0.clone()
+    }
+
+    pub fn as_slice(&self) -> &[ScriptBit] {
+        &self.0
+    }
+
+    pub fn iter(&self) -> std::slice::Iter<'_, ScriptBit> {
+        self.0.iter()
+    }
+
+    pub fn get_scriptbit_length(&self) -> usize {
+        self.0.len()
     }
 
     pub fn get_script_bit(&self, index: usize) -> Option<ScriptBit> {
