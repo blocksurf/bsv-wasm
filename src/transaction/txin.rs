@@ -70,7 +70,7 @@ impl TxIn {
         }
     }
 
-    pub(crate) fn get_finalised_script_bits_impl(&self) -> Result<Vec<ScriptBit>, BSVErrors> {
+    pub(crate) fn get_finalised_script_bits_impl(&self) -> Vec<ScriptBit> {
         match self.locking_script.as_ref() {
             // If there is a specified unlocking script, prepend it to the locking script
             Some(locking_script) => {
@@ -82,9 +82,9 @@ impl TxIn {
                 bits.extend_from_slice(unlock);
                 bits.extend_from_slice(lock);
 
-                Ok(bits)
+                bits
             }
-            None => Ok(self.unlocking_script.to_script_bits()),
+            None => self.unlocking_script.to_script_bits(),
         }
     }
 
@@ -502,7 +502,7 @@ impl TxIn {
         self.get_finalised_script_impl()
     }
 
-    pub fn get_finalised_script_bits(&self) -> Result<Vec<ScriptBit>, BSVErrors> {
+    pub fn get_finalised_script_bits(&self) -> Vec<ScriptBit> {
         self.get_finalised_script_bits_impl()
     }
 
